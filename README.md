@@ -12,6 +12,26 @@ cd checkbund
 npm install
 ```
 
+### Build the app
+
+To build the app, build the webapp with vite then run the capacitor command.
+```bash
+npm run build
+npx cap sync
+```
+
+After finished syncing, you can open the android folder with android studio.
+
+### Preview components with storybook
+
+To preview components and pages, adjust the stories under the src/storybook folder.
+Find out more about storybook on https://storybook.js.org.
+
+To run the preview.
+```bash
+npm run storybook
+```
+
 ### Run capacitor commnads
 
 To run the provided example, you can use `npm start` command.
