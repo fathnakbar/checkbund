@@ -5,5 +5,5 @@
     import "./lib/app.css"
 </script>
 
-<Login />
+<slot></slot>
 
