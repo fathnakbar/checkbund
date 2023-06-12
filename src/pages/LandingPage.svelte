@@ -16,7 +16,7 @@
   </p>
   <div class="button-group flex items-center justify-center my-5">
     <a>Register</a>
-    <a>Sign In</a>
+    <a>Login</a>
   </div>
 </div>
 
