@@ -1,35 +1,56 @@
+<script>
+  import "../lib/app.css";
+  import IlustrasiBidan from "../lib/assets/images/ilustrasi_bidan.jpg";
 
+  // import IlustrasiBidan from "$lib/assets/images/ilustrasi_bida.jpg"
+</script>
+
+<div class="container w-full flex flex-col h-full items-center justify-center">
+  <div class="my-11"></div>
+  <img src={IlustrasiBidan} alt="Ilustrasi bidan sedang menggendong bayi" />
+  <span class="text-2xl font-bold">Checkbund</span>
+
+  <p class="text-bg text-center">
+    Checkbund, teman setia ibu hamil dan bidan dalam perjalanan kehamilan yang
+    lancar!
+  </p>
+  <div class="button-group flex items-center justify-center my-5">
+    <a>Register</a>
+    <a>Sign In</a>
+  </div>
+</div>
 
 <style>
-    img{
-        width: 200px;
-        height:  200px;
+  * {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
+  div.container {
+    height: 100vh;
+    padding: 11px;
+  }
 
-    }
+  div.container > * {
+    margin: 7px;
+  }
+
+  .button-group > * {
+    padding: 5px 11px;
+    border-radius: 4px;
+    margin: 7px;
+  }
+
+  .button-group > *:active {
+    opacity: 0.5;
+  }
+
+  .button-group > *:nth-child(1) {
+    background-color: rgb(243, 225, 202);
+  }
+
+  .button-group > *:nth-child(2) {
+    background-color: rgb(97, 132, 248);
+    color: white;
+  }
 </style>
-<div class="w-full items-center flex justify-center mt-40">
-    <img src="./assets/imgs/logocheckbund.png" alt="">
-</div>
-
-<div class="w-full items-center flex justify-center mt-10">
-    <div class="flex mt-5">
-        <div class="m-3">
-          <button
-            class="w-72 bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-blue-500 hover:border-blue-600 hover:bg-blue-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center">
-            <span class="mx-auto">Login</span>
-          </button>
-        </div>
-      </div>
-</div>
-
-<div class="w-full items-center flex justify-center">
-    <div class="flex mt-5">
-        <div class="m-3">
-          <button
-            class="w-72 bg-white tracking-wide text-gray-800 font-bold rounded border-b-2 border-red-500 hover:border-red-600 hover:bg-red-500 hover:text-white shadow-md py-2 px-6 inline-flex items-center">
-            <span class="mx-auto">Register</span>
-          </button>
-        </div>
-      </div>
-</div>
-

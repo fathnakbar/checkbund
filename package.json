@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
+    "@smui/ripple": "^7.0.0-beta.8",
     "@storybook/addon-essentials": "^7.0.18",
     "@storybook/addon-interactions": "^7.0.18",
     "@storybook/addon-links": "^7.0.18",
@@ -33,6 +34,7 @@
     "@storybook/svelte": "^7.0.18",
     "@storybook/svelte-vite": "^7.0.18",
     "@storybook/testing-library": "^0.0.14-next.2",
+    "@sveltejs/adapter-static": "^2.0.2",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
     "react": "^18.2.0",
