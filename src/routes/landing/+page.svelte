@@ -1,5 +1,5 @@
 <script>
-  import IlustrasiBidan from "../lib/assets/images/ilustrasi_bidan.jpg";
+  import IlustrasiBidan from "../../lib/assets/images/ilustrasi_bidan.jpg";
 
   // import IlustrasiBidan from "$lib/assets/images/ilustrasi_bida.jpg"
 </script>
