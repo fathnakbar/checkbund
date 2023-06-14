@@ -1,4 +1,4 @@
-import Page from "../pages/Register.svelte";
+import Page from "../routes/register/+page.svelte";
 
 export default {
   title: 'Page/Register',

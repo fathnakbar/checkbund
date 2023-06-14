@@ -1,4 +1,4 @@
-import Page from "../pages/LandingPage.svelte";
+import Page from "../routes/landing/+page.svelte";
 
 export default {
   title: 'Page/Landing Page',

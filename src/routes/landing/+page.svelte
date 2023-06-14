@@ -1,5 +1,4 @@
 <script>
-  import "../lib/app.css";
   import IlustrasiBidan from "../lib/assets/images/ilustrasi_bidan.jpg";
 
   // import IlustrasiBidan from "$lib/assets/images/ilustrasi_bida.jpg"
@@ -15,8 +14,8 @@
     lancar!
   </p>
   <div class="button-group flex items-center justify-center my-5">
-    <a>Register</a>
-    <a>Login</a>
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
   </div>
 </div>
 
