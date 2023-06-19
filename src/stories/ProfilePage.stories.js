@@ -1,5 +1,5 @@
 import Page from "../pages/ProfilePage.svelte";
-import App from "../App.svelte"
+import "$lib/app.css"
 
 export default {
   title: 'Page/Profile Page',

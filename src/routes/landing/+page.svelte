@@ -1,5 +1,9 @@
 <script>
+  import { onMount } from "svelte";
   import IlustrasiBidan from "../../lib/assets/images/ilustrasi_bidan.jpg";
+  import { guardian } from "../../lib/client";
+
+  onMount(guardian)
 
   // import IlustrasiBidan from "$lib/assets/images/ilustrasi_bida.jpg"
 </script>
@@ -17,6 +21,7 @@
     <a href="/register">Register</a>
     <a href="/login">Login</a>
   </div>
+  <div class="my-11"></div>
 </div>
 
 <style>

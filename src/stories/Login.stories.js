@@ -1,4 +1,5 @@
 import Page from "../routes/login/+page.svelte";
+import "$lib/app.css"
 
 export default {
   title: "Page/Login",

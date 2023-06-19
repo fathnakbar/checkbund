@@ -1,8 +1,8 @@
 {
   "appId": "com.checkbund.app",
-  "appName": "checkbund",
+  "appName": "Checkbund",
   "bundledWebRuntime": false,
-  "webDir": "dist",
+  "webDir": "build",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0

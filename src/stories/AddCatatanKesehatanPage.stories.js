@@ -1,5 +1,4 @@
 import Page from "../pages/AddCatatanKesehatanPage.svelte";
-import App from "../App.svelte"
 
 export default {
   title: 'Page/Add Catatan Kesehatan',

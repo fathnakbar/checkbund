@@ -1,4 +1,6 @@
 import Page from "../routes/register/+page.svelte";
+import "$lib/app.css"
+
 
 export default {
   title: 'Page/Register',

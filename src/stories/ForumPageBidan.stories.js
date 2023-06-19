@@ -1,5 +1,4 @@
 import Page from "../pages/ForumPageBidan.svelte";
-import App from "../App.svelte"
 
 export default {
   title: 'Page/Forum Page Bidan',

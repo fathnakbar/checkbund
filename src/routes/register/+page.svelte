@@ -1,5 +1,5 @@
 <script>
-  import { Label, Input, Button, Checkbox, Helper } from "flowbite-svelte";
+  import { Label, Input, Button, Helper, Spinner } from "flowbite-svelte";
   import Password from "../../lib/assets/icons/password.svelte";
   import Mail from "../../lib/assets/icons/mail.svelte";
   import Call from "../../lib/assets/icons/call.svelte";
@@ -7,40 +7,78 @@
   import Stetoscope from "../../lib/assets/icons/stetoscope.svelte";
   import Women from "../../lib/assets/icons/women.svelte";
   import Number from "../../lib/assets/icons/number.svelte";
+  import { PREFERENCE_KEYS, guardian, signUp } from "../../lib/client";
   import { onMount } from "svelte";
+  import { Preferences } from '@capacitor/preferences';
+  import { goto } from "$app/navigation";
 
   let role = null;
   let form = null;
   let roleContainer = null;
 
   let submitted = false;
-  let confirm = true;
+  let form_submitted = false;
+  let password_err = "";
+  let confirm_err = "";
+
+  $: confirm_hint = confirm_err ? "red" : undefined
+  $: password_hint = password_err ? "red" : undefined
 
   function changeRole(v) {
     role = v;
   }
 
-  onMount(() => {
-    const inputs = form.querySelectorAll("input")
+  onMount(async () => {
+    form["name"].value = "Gadila Asa Penjuru";
+    form["email"].value = "fathnakbar@gmail.com";
+    form["phone"].value = "081278596622";
+    form["address"].value = "Bandung";
+    form["password"].value = "password123";
+    form["confirm"].value = "password123";
 
-    // console.log(inputs)
+    form["password"].oninput = () => {password_err = ""}
+    form["confirm"].oninput = () => {confirm_err = ""}
+
+    await guardian()
+
   })
 
-  function submit() {
-    // form.submit();
-    const data = new FormData(form)
-    const parse = Object.fromEntries([...data.keys()].map(k => [k, data.get(k)]))
-    console.log([...data.values()])
-  }
+  async function handleSubmit() {
 
-  function handleSubmit() {
-    if (form["password"].value != form["confirm"].value) {
+    // TODO: Update input validation!!!
 
-      form["password"].scrollIntoView({block: "start", behavior: "smooth"})
+    
+    const inputs = Object.fromEntries(Array.from(form.querySelectorAll("input")).map(e => [e.name, e.value]));
+
+    console.log(inputs)
+
+    const validation = [inputs.password.length < 8, inputs.password != inputs.confirm, !role]; // Error expression
+
+    if (validation[0]) {
+      password_err = "Password length has to be >= 8"
     }
 
-    if (role) {
-      form.submit()
+    if (validation[1]) {
+      confirm_err = "Password and confirmation are not equal"
+    }
+
+    if(validation[2]) {
+      roleContainer.scrollIntoView({block: "start", behavior: "smooth"})
+      submitted = true;
+    }
+
+    if (validation.filter(e => e == true).length == 0) {
+      form_submitted = true;
+      const {data: {user}, error} = await signUp({email: inputs.email, password: inputs.password})
+      if (!error && user) {
+        await Preferences.set({
+          key: PREFERENCE_KEYS.HAS_SIGNUP,
+          value: JSON.stringify({user, inputs})
+        })
+
+        goto("/wait_confirm")
+      }
+
     }
   }
 </script>
@@ -55,7 +93,7 @@
   <form bind:this={form} on:submit|preventDefault={handleSubmit}>
     <div class="mb-6 pt-5" bind:this={roleContainer}>
       <input type="text" name="role" class="hidden" bind:value={role} />
-      <Label class="block mb-2 relative">Siapakah anda?</Label>
+      <Label class={`block mb-3 relative ${!role && submitted && "text-red-600"}`}>Siapakah anda?</Label>
       <Button color={role == "bidan" ? "primary" : "light"} on:click={changeRole.bind(null,"bidan")}><Stetoscope class="w-5 h-5"/>Bidan</Button>
       <Button color={role == "bumil" ? "primary" : "light"} on:click={changeRole.bind(null,"bumil")}><Women class="w-5 h-5" />Ibu Hamil</Button>
       {#if !role && submitted}
@@ -115,26 +153,29 @@
     </div>
     {/if}
     <div class="mb-6">
-      <Label for="input-group-1" class="block mb-2" color={!confirm ? "red" : undefined} >Password</Label>
-      <Input type="password" name="password" placeholder="Enter your password" {...{color: !confirm ? "red" : undefined}} required>
+      <Label for="input-group-1" class="block mb-2" color={password_hint} >Password</Label>
+      <Input type="password" name="password" placeholder="Enter your password" {...{color: password_hint}} required>
         <Password
           slot="left"
           aria-hidden="true"
-          class="w-5 h-5 text-gray-500 dark:text-gray-400"
+          class={`w-5 h-5 text-${password_hint || "grey"}-500 dark:text-${password_hint || "grey"}-400`}
         />
       </Input>
+      {#if password_err}
+       <Helper class="mt-2" color="red">{password_err}</Helper>
+     {/if}
     </div>
     <div class="mb-6">
-      <Label for="input-group-1" class="block mb-2" color={!confirm ? "red" : undefined}>Confirm Password</Label>
-      <Input type="password" name="confirm" placeholder="Re-enter your password" {...{color: !confirm ? "red" : undefined}} required>
+      <Label for="input-group-1" class="block mb-2" color={confirm_hint}>Confirm Password</Label>
+      <Input type="password" name="confirm" placeholder="Re-enter your password" {...{color: confirm_hint}} required>
         <Password
           slot="left"
           aria-hidden="true"
-          class={`w-5 h-5 text-${!confirm ? "red" : "grey"}-500 dark:text-${!confirm ? "red" : "grey"}-400`}
+          class={`w-5 h-5 text-${confirm_hint || "grey"}-500 dark:text-${confirm_hint || "grey"}-400`}
         />
       </Input>
-      {#if !confirm}
-        <Helper class="mt-2" color="red">Password and Confirm password are not equal</Helper>
+      {#if confirm_err}
+        <Helper class="mt-2" color="red">{confirm_err}</Helper>
       {/if}
     </div>
 
@@ -144,14 +185,11 @@
         class="text-primary-500 font-bold">Privacy Policy</a
       ></Checkbox
     > -->
-    <Button class="w-full mt-7" on:click={() => {
-      submitted = true;
-      if(!role) roleContainer.scrollIntoView({block: "start", behavior: "smooth"})
-    }}>Sign Up</Button>
+    <Button class="w-full mt-7" type="submit">Sign Up {#if form_submitted}<Spinner class="mx-3" size={4}/>{/if}</Button>
   </form>
 
   <div class="text-center my-7 text-sm">
-    Already have an account? <a href="/register" class="text-primary-500 font-bold"
+    Already have an account? <a href="/login" class="text-primary-500 font-bold"
       >Login</a
     >
   </div>
@@ -159,9 +197,3 @@
   <br />
   <br />
 </div>
-
-<style>
-  input[name="role"]:invalid {
-    outline: none;
-  }
-</style>

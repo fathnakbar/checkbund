@@ -1,5 +1,4 @@
 import Page from "../pages/NotificationPageBumil.svelte";
-import App from "../App.svelte"
 
 export default {
   title: 'Page/Notification Page Bumil',

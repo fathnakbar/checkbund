@@ -1,5 +1,4 @@
 import Page from "../pages/ForumPageBumil.svelte";
-import App from "../App.svelte"
 
 export default {
   title: 'Page/Forum Page Bumil',

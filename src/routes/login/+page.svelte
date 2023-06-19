@@ -3,6 +3,34 @@
   import Password from '../../lib/assets/icons/password.svelte';
   import Google from "../../lib/assets/icons/google.png"
   import Mail from '../../lib/assets/icons/mail.svelte';
+  import { Spinner } from 'flowbite-svelte';
+  import { guardian, setSession, signIn } from '../../lib/client';
+  import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
+
+  let form = null;
+  let signed
+  let google_signed
+
+  onMount(guardian)
+
+  async function handleSubmit() {
+    signed = true;
+    const inputs = new FormData(form)
+    const parse = Object.fromEntries([...inputs.keys()].map(k => [k, inputs.get(k)]))
+
+    const {data: {session}, error} = await signIn(parse);
+
+    if (!error && session) {
+      await setSession(session)
+      goto("/")
+    }
+  }
+
+  async function googleSignIn() {
+    google_signed = true;
+    const {data, error} = await signIn({provider: "google"});
+  }
 </script>
 
 <div class="p-7">
@@ -10,16 +38,16 @@
     <h1 class="font-bold text-lg">Welcome Back!</h1>
     <span class="text-gray-500 text-sm">Enter your username and password to conitnue!</span>
   </div>
-  <form action="post">
+  <form action="post" on:submit|preventDefault={handleSubmit} bind:this={form}>
     <div class="mb-6">
       <Label for="input-group-1" class="block mb-2">Username</Label>
-      <Input id="email" type="email" placeholder="example@gmail.com">
+      <Input name="email" type="email" placeholder="example@gmail.com" required>
         <Mail slot="left" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
       </Input>
     </div>
     <div class="mb-6">
       <Label for="input-group-1" class="block mb-2">Password</Label>
-      <Input id="email" type="email" placeholder="Enter your password">
+      <Input name="password" type="password" placeholder="Enter your password" required>
       <Password slot="left" aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
     </Input>
     </div>
@@ -27,11 +55,11 @@
       <Checkbox>Remember me</Checkbox>
       <a href="/forgot_password" class="text-sm text-primary-500">Forgot password?</a>
     </div>
-    <Button class="w-full" color="primary">Sign In</Button>
+    <Button class="w-full" color="primary" type="submit" disabled={google_signed}>Sign In{#if signed}<Spinner class="mx-3" size={4}/>{/if}</Button>
   </form>
   <div class="text-center text-gray-500 text-sm my-3">or</div>
-  <Button class="w-full" color="light">
-    <img src={Google} alt="google icon" width="24" class="mx-2"/> Sign in with Google
+  <Button class="w-full" color="light" on:click={googleSignIn} disabled={signed}>
+    <img src={Google} alt="google icon" width="24" class="mx-2"/> Sign in with Google {#if google_signed}<Spinner class="mx-3" size={4}/>{/if}
   </Button>
 
   <div class="text-center my-7 text-sm">Don't have an account? <a href="/register" class="text-primary-500">Register</a></div>
