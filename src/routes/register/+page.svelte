@@ -29,12 +29,12 @@
   }
 
   onMount(async () => {
-    form["name"].value = "Gadila Asa Penjuru";
-    form["email"].value = "fathnakbar@gmail.com";
-    form["phone"].value = "081278596622";
-    form["address"].value = "Bandung";
-    form["password"].value = "password123";
-    form["confirm"].value = "password123";
+    // form["name"].value = "Gadila Asa Penjuru";
+    // form["email"].value = "fathnakbar@gmail.com";
+    // form["phone"].value = "081278596622";
+    // form["address"].value = "Bandung";
+    // form["password"].value = "password123";
+    // form["confirm"].value = "password123";
 
     form["password"].oninput = () => {password_err = ""}
     form["confirm"].oninput = () => {confirm_err = ""}

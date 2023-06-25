@@ -11,7 +11,7 @@
 
     console.log(isLoggedIn)
     if (isLoggedIn) {
-      goto("/home");
+      goto("/app");
     } else {
       // Check if the user has signup
       let { value: signup } = await Preferences.get({

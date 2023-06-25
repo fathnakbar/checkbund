@@ -12,21 +12,23 @@ export const nodes = [
 	() => import('./nodes/8'),
 	() => import('./nodes/9'),
 	() => import('./nodes/10'),
-	() => import('./nodes/11')
+	() => import('./nodes/11'),
+	() => import('./nodes/12')
 ];
 
 export const server_loads = [];
 
 export const dictionary = {
 		"/": [3],
-		"/confirm_redirect": [4],
-		"/confirmed": [5],
-		"/home": [6,[2]],
-		"/home/bidan": [7,[2]],
-		"/landing": [8],
-		"/login": [9],
-		"/register": [10],
-		"/wait_confirm": [11]
+		"/app": [4,[2]],
+		"/app/bidan": [5,[2]],
+		"/app/bumil/home": [6,[2]],
+		"/confirm_redirect": [7],
+		"/confirmed": [8],
+		"/landing": [9],
+		"/login": [10],
+		"/register": [11],
+		"/wait_confirm": [12]
 	};
 
 export const hooks = {

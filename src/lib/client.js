@@ -107,7 +107,7 @@ export async function guardian(){
 
   if (isLoggedIn && path.match(unprotected_path)) {
       console.log("User have session", isLoggedIn)
-      goto("/home")
+      goto("/app")
 
     return false
   }
