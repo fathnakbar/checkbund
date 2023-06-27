@@ -102,7 +102,7 @@ export async function guardian(){
   const unprotected_path = /(\/login|\/register|\/landing|\/confirmed|\/wait_confirm)/g;
   const isLoggedIn = await getSession();
 
-  console.log(isLoggedIn && path.match(unprotected_path), path)
+  // console.log(isLoggedIn && path.match(unprotected_path), path)
 
 
   if (isLoggedIn && path.match(unprotected_path)) {

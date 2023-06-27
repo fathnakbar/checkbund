@@ -13,7 +13,10 @@ export const nodes = [
 	() => import('./nodes/9'),
 	() => import('./nodes/10'),
 	() => import('./nodes/11'),
-	() => import('./nodes/12')
+	() => import('./nodes/12'),
+	() => import('./nodes/13'),
+	() => import('./nodes/14'),
+	() => import('./nodes/15')
 ];
 
 export const server_loads = [];
@@ -22,13 +25,16 @@ export const dictionary = {
 		"/": [3],
 		"/app": [4,[2]],
 		"/app/bidan": [5,[2]],
-		"/app/bumil/home": [6,[2]],
-		"/confirm_redirect": [7],
-		"/confirmed": [8],
-		"/landing": [9],
-		"/login": [10],
-		"/register": [11],
-		"/wait_confirm": [12]
+		"/app/bumil": [6,[2]],
+		"/app/profile": [7,[2]],
+		"/clinic": [8],
+		"/clinic/new": [9],
+		"/confirm_redirect": [10],
+		"/confirmed": [11],
+		"/landing": [12],
+		"/login": [13],
+		"/register": [14],
+		"/wait_confirm": [15]
 	};
 
 export const hooks = {

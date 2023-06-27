@@ -10,7 +10,16 @@
 	"/app/bidan": [
 		"src/routes/+layout.js"
 	],
-	"/app/bumil/home": [
+	"/app/bumil": [
+		"src/routes/+layout.js"
+	],
+	"/app/profile": [
+		"src/routes/+layout.js"
+	],
+	"/clinic": [
+		"src/routes/+layout.js"
+	],
+	"/clinic/new": [
 		"src/routes/+layout.js"
 	],
 	"/confirm_redirect": [

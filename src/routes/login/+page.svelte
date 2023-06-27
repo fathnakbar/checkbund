@@ -64,8 +64,3 @@
 
   <div class="text-center my-7 text-sm">Don't have an account? <a href="/register" class="text-primary-500">Register</a></div>
 </div>
-
-
-<style>
-  
-</style>
