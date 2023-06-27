@@ -47,5 +47,4 @@
 
 {#if !load}
   <Loading />
-  {:else}
 {/if}
