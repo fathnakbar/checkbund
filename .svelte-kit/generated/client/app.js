@@ -25,6 +25,7 @@ export const dictionary = {
 		"/": [3],
 		"/app": [4,[2]],
 		"/app/bidan": [5,[2]],
+<<<<<<< HEAD
 		"/app/bumil": [6,[2]],
 		"/app/profile": [7,[2]],
 		"/clinic": [8],
@@ -35,6 +36,15 @@ export const dictionary = {
 		"/login": [13],
 		"/register": [14],
 		"/wait_confirm": [15]
+=======
+		"/app/bumil/home": [6,[2]],
+		"/confirm_redirect": [8],
+		"/confirmed": [7],
+		"/landing": [9],
+		"/login": [10],
+		"/register": [11],
+		"/wait_confirm": [12]
+>>>>>>> bcbec32f7b6e6be46a61355c56fb3a446e2048a0
 	};
 
 export const hooks = {
