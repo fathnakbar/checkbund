@@ -1,5 +1,5 @@
 <script>
-  import { Button, CloseButton, A } from "flowbite-svelte";
+  import { Button } from "flowbite-svelte";
   import Call from "../../../lib/assets/icons/call.svelte";
   import More from "../../../lib/assets/icons/more.svelte";
   import { onMount } from "svelte";
@@ -26,7 +26,7 @@
     await guardian();
     await hydration();
 
-    console.log({ klinik, catatan, jadwal, user_data });
+    console.log("Logging:", { klinik, catatan, jadwal, user_data });
 
     if (!klinik) {
       goto("/clinic");
@@ -53,7 +53,8 @@
     [klinik, catatan, jadwal] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
-    klinik = klinik[0];
+
+    klinik = klinik && klinik[0]; // Pembaruan
 
     if (!user.error == "fulfilled") {
       user_data = user.data[0];
@@ -70,12 +71,6 @@
         ({ id }) => supabase.from("jadwal").select("*").eq("pasien", id),
       ],
     ];
-  }
-
-  function changeView(type) {
-    return () => {
-      view_daftar = type;
-    };
   }
 </script>
 
