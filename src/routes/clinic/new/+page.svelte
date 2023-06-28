@@ -45,7 +45,7 @@
     }
 
     async function checkOwn() {
-      return (await supabase.from("user_data").select("clinic")).data;
+      return (await supabase.from("user_data").select("clinic")).data[0]?.clinic;
     }
   
     async function handleSubmit() {

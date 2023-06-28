@@ -13,6 +13,9 @@
 	"/app/bumil": [
 		"src/routes/+layout.js"
 	],
+	"/app/catatan": [
+		"src/routes/+layout.js"
+	],
 	"/app/profile": [
 		"src/routes/+layout.js"
 	],

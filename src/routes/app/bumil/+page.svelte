@@ -61,7 +61,7 @@
     [klinik, catatan, jadwal] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
-    klinik = klinik[0];
+    klinik = klinik && klinik[0];
 
     if (!user.error == "fulfilled") {
       user_data = user.data[0];

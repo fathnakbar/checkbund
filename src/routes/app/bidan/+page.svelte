@@ -53,7 +53,7 @@
     [klinik, catatan, jadwal] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
-    klinik = klinik[0];
+    klinik = klinik && klinik[0];
 
     if (!user.error == "fulfilled") {
       user_data = user.data[0];
@@ -68,6 +68,7 @@
           clinic && supabase.from("clinic").select("*").eq("id", clinic),
         ({ id }) => supabase.from("catatan").select("*").eq("pasien", id),
         ({ id }) => supabase.from("jadwal").select("*").eq("pasien", id),
+        ({ clinic }) => supabase.from("user_data").select("policies").eq("clinic", clinic).eq("role", "bumil"),
       ],
     ];
   }
@@ -143,9 +144,14 @@
         </div>
     {/if}
   </ul>
+  <ul>
+    
+  </ul>
   <br />
   <br />
   <br />
+  <!-- List Ibu Hamil -->
+  
 </div>
 
 <style>
