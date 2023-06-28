@@ -33,10 +33,17 @@ export const dictionary = {
 		"/clinic/new": [10],
 		"/confirm_redirect": [12],
 		"/confirmed": [11],
+<<<<<<< HEAD
 		"/landing": [13],
 		"/login": [14],
 		"/register": [15],
 		"/wait_confirm": [16]
+=======
+		"/landing": [12],
+		"/login": [13],
+		"/register": [14],
+		"/wait_confirm": [15]
+>>>>>>> a32707ee1a7010108aa2c5789310728b6272045a
 	};
 
 export const hooks = {
