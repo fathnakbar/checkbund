@@ -91,21 +91,23 @@ export async function checkClinicOwnership() {
   return clinic
 }
 
+async function clearSession(){
+  localStorage.clear();
+  await Preferences.remove({
+    key: PREFERENCE_KEYS.SESSION
+  })
+}
+
 export async function logout() {
   await supabase.auth.signOut();
-  await refreshSession();
+  await clearSession();
 }
 
 export async function refreshSession(){
-  const {data: {session}, error} = await supabase.auth.refreshSession(getSession());
+  const {data: {session}, error} = await supabase.auth.refreshSession(await getSession());
+
   if (error || !session) {
-    const {error: logout_err} = await supabase.auth.signOut()
-    if (logout_err) {
-      localStorage.clear();
-    }
-    await Preferences.remove({
-      key: PREFERENCE_KEYS.SESSION
-    })
+    await clearSession()
     return
   }
 

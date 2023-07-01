@@ -1,9 +1,11 @@
 <script>
   import { Button } from "flowbite-svelte";
   import { logout } from "../../../lib/client";
+  import { goto } from "$app/navigation";
 
-  async function _logout(){
-    await logout()
+  async function _logout() {
+    await logout();
+    goto("/")
   }
 
 </script>
@@ -47,7 +49,7 @@
             </div>
           </li>
           <li class="p-4">
-            <Button on:click={_logout}>Logout</Button>
+            <Button on:click={logout}>Logout</Button>
           </li>
         </ul>
       </div>
