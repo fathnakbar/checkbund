@@ -9,9 +9,7 @@
   import Schedule from "../../../lib/assets/icons/schedule.svelte";
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
   import { getUserData, guardian, supabase } from "../../../lib/client";
-  import { getSession } from "../../../lib/client";
   import ClinicHeader from "../../../lib/components/ClinicHeader.svelte";
-  import Profile from "../../../lib/assets/icons/profile.svelte";
   import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
 
   let view_daftar = "nifas";

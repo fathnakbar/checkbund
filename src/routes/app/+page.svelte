@@ -1,6 +1,6 @@
 <script>
   import { Button } from "flowbite-svelte";
-  import { PREFERENCE_KEYS, getSession, guardian, supabase } from "../../lib/client";
+  import { getUserData, guardian, supabase } from "../../lib/client";
   import { Preferences } from "@capacitor/preferences";
   import { goto } from "$app/navigation"
   import { onMount } from "svelte";
@@ -12,32 +12,17 @@
 
   onMount(async () => {
     await guardian();
-    await hydration();
+
+    user_data = (await getUserData()).data;
+
+    console.dir(user_data)
 
     if (user_data) {
-      console.log(user_data)
-      goto("/app/" + user_data.role);
+      goto("/app/" + user_data.role || "");
     }
 
     load = true;
   })
-
-  async function hydration(){
-    let result = await requests((await getSession()).user);
-
-    if (result.data && result.data.length > 0) {
-      if (result.error) {
-        return
-      }
-
-      user_data = result.data[0];   
-    }
-  }
-
-  function requests({id}) {
-    return supabase.from("user_data").select("*").eq("id", id)
-  }
-
 
 
 

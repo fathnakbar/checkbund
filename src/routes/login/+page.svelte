@@ -12,6 +12,7 @@
   let signed
   let google_signed
   let type = "password";
+  let error;
   let show=()=>{
     if(type=="password"){
       type = "text";
@@ -24,20 +25,22 @@
 
   async function handleSubmit() {
     signed = true;
+    error = undefined;
     const inputs = new FormData(form)
     const parse = Object.fromEntries([...inputs.keys()].map(k => [k, inputs.get(k)]))
 
-    const {data: {session}, error} = await signIn(parse);
+    const {data: {session}, error: _error} = await signIn(parse);
 
-    if (!error && session) {
-      await setSession(session)
-      goto("/")
+    signed = false;
+
+
+    if (_error && !session) {
+      error = _error.message;
+      return
     }
-  }
 
-  async function googleSignIn() {
-    google_signed = true;
-    const {data, error} = await signIn({provider: "google"});
+    await setSession(session)
+    goto("/")
   }
 </script>
 
@@ -46,6 +49,9 @@
     <h1 class="font-bold text-lg">Welcome Back!</h1>
     <span class="text-gray-500 text-sm">Enter your username and password to conitnue!</span>
   </div>
+  {#if error}
+    <div class="text-red-500 my-3">{error}</div>
+  {/if}
   <form action="post" on:submit|preventDefault={handleSubmit} bind:this={form}>
     <div class="mb-6">
       <Label for="input-group-1" class="block mb-2">Username</Label>
@@ -77,14 +83,9 @@
     </div>
     <div class="flex justify-between my-6">
       <Checkbox>Remember me</Checkbox>
-      <a href="/forgot_password" class="text-sm text-primary-500">Forgot password?</a>
     </div>
     <Button class="w-full" color="primary" type="submit" disabled={google_signed}>Sign In{#if signed}<Spinner class="mx-3" size={4}/>{/if}</Button>
   </form>
-  <div class="text-center text-gray-500 text-sm my-3">or</div>
-  <Button class="w-full" color="light" on:click={googleSignIn} disabled={signed}>
-    <img src={Google} alt="google icon" width="24" class="mx-2"/> Sign in with Google {#if google_signed}<Spinner class="mx-3" size={4}/>{/if}
-  </Button>
 
   <div class="text-center my-7 text-sm">Don't have an account? <a href="/register" class="text-primary-500">Register</a></div>
 </div>

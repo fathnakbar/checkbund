@@ -8,11 +8,11 @@
   export let contact = "081278596622";
 </script>
 
-<li class="p-3 m-3">
-  <div class="flex items-center justify-between space-x-4">
+<li class="py-3 my-3 w-full">
+  <div class="flex items-center justify-between space-x-4 w-full">
     <div>
-      <h3 class="font-bold">{name}</h3>
-      <div class="text-gray-500">{address}</div>
+      <h3 class="font-bold text-sm">{name}</h3>
+      <div class="text-gray-500 text-sm break-all">{address}</div>
     </div>
     <div class="flex items-center">
       <Button

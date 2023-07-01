@@ -13,6 +13,9 @@
 	"/app/bidan/catatan": [
 		"src/routes/+layout.js"
 	],
+	"/app/bidan/catatan/add": [
+		"src/routes/+layout.js"
+	],
 	"/app/bumil": [
 		"src/routes/+layout.js"
 	],

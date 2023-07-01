@@ -1,1 +1,1 @@
-export { default as component } from "../../../../src/routes/app/bumil/+page.svelte";
+export { default as component } from "../../../../src/routes/app/bidan/catatan/add/+page.svelte";

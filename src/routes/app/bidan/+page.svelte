@@ -108,7 +108,7 @@
   </div>
 
   <div class="text-sm font-bold mb-3">Daftar Ibu Hamil</div>
-  <ul class="flex-grow">
+  <ul class="flex-grow w-full">
     {#if bumil && bumil.length > 0}
       {#each bumil as item}
         <ItemListBumil {...{...item, contact: item.contact.phone}} on:detail={show} />

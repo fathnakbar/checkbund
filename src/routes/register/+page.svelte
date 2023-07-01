@@ -12,7 +12,7 @@
   import { Preferences } from '@capacitor/preferences';
   import { goto } from "$app/navigation";
 
-  let role = null;
+  let role = "bumil";
   let form = null;
   let roleContainer = null;
 
@@ -158,6 +158,16 @@
           required="true"
         />
       </Input>
+    </div>
+    {/if}
+    {#if role == "bumil"}
+    <div class="mb-6">
+      <Label for="input-group-1" class="block mb-2">Tanggal lahir</Label>
+      <Input type="date" name="birth" required />
+    </div>
+    <div class="mb-6">
+      <Label for="input-group-1" class="block mb-2">Nama Suami</Label>
+      <Input type="text" name="husband" placeholder="Masukkan nama suami anda" required />
     </div>
     {/if}
     <div class="mb-6">

@@ -19,7 +19,7 @@
 
   onMount(async () => {
     if (!(await guardian())) {
-      return
+      return;
     }
     let { value } = await Preferences.get({
       key: PREFERENCE_KEYS.HAS_SIGNUP,
@@ -27,59 +27,63 @@
 
     value = JSON.parse(value);
 
-    console.log(value);
-
     if (!value || (!value?.user && !value?.inputs)) {
       goto("/landing");
       return;
     }
-    
+
     if (!value.confirmed) {
-      goto("/wait_confirm")
+      goto("/wait_confirm");
     }
 
+    const { user, inputs } = value;
+
     const {
-      user,
-      inputs: { email, password, name, phone, no_str, role, address },
-    } = value;
+      data: { session },
+      error: error_signin,
+    } = await signIn({ email: inputs.email, password: inputs.password });
 
-    const { data: { session }, error: error_signin } = await signIn({ email, password });
-
-    error = error_signin?.name // Email not confirmed error
+    error = error_signin?.message; // Email not confirmed error
 
     if (!error_signin && session) {
       await setSession(session);
 
       const { data, error: err } = await supabase.from("user_data").insert({
+        ...inputs,
+        contact: { phone: inputs.phone },
         id: user.id,
-        name,
-        contact: { phone },
-        no_str,
-        address,
-        role,
+        confirm: undefined,
+        email: undefined,
+        password: undefined,
+        phone: undefined,
       });
 
-      if (err && !data) {
-        // Error: Insert 
+      if (!err) {
+        goto("/app");
+        return;
+      } else {
+        error = err.message;
       }
     }
 
     loading = false;
 
-    if (!error) {
-      await Preferences.remove({ key: PREFERENCE_KEYS.HAS_SIGNUP });
-      goto("/home");
-      return
-    }
-
     if (error_signin?.status == 400) {
-      console.log("redirect")
-      goto("/wait_confirm")
+      await Preferences.set({
+        key: PREFERENCE_KEYS.HAS_SIGNUP,
+        value: JSON.stringify({ ...value, confirmed: false }),
+      });
+      goto("/wait_confirm");
       error = "";
+    } else {
+      await Preferences.remove({ key: PREFERENCE_KEYS.HAS_SIGNUP });
     }
-
-    
   });
+
+  async function clear() {
+    await Preferences.remove({ key: PREFERENCE_KEYS.HAS_SIGNUP });
+    goto("/");
+  }
 </script>
 
 {#if loading}
@@ -101,7 +105,7 @@
       via whatsapp.
     </p>
     <div class="mt-7 flex flex-col">
-      <Button href="/" color="blue" class="mb-3">Coba lagi</Button>
+      <Button on:click={clear} color="blue" class="mb-3">Coba lagi</Button>
       <Button href="https://wa.me/+6283815411488" color="light"
         ><img
           src={Whatsapp}
@@ -111,6 +115,6 @@
         />Hubungi kami</Button
       >
     </div>
-    <div class="my-11"></div>
+    <div class="my-11" />
   </div>
 {/if}

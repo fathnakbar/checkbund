@@ -80,8 +80,14 @@ export async function setSession(_session) {
   return session;
 }
 
+async function getUser() {
+  let {user} = await getSession();
+  return user ?? await supabase.auth.getUser();
+  
+}
+
 export async function getUserData() {
-  let {id} = (await getSession()).user;
+  let {id} = await getUser();
   let {data, error} = await supabase.from("user_data").select("*").eq("id", id);
   return data && data.length > 0 && !error ? {data: data[0], error} : {data, error};
 }

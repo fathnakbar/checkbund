@@ -5,7 +5,7 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import { supabase } from '$lib/client';
-  import { checkClinicOwnership, getSession } from '../../../lib/client';
+  import { checkClinicOwnership, getSession, getUserData } from '../../../lib/client';
   
     let form = null;
     let signed
@@ -26,11 +26,10 @@
     })
 
     async function hydration() {
-      let{id} = (await getSession()).user
-      let {data, error} = await supabase.from("user_data").select("*").id("id", id)
+      const {data, error: _error} = await getUserData();
 
-      if (!error && data && data[0]) {
-        user_data = user.data[0] 
+      if (!_error && data) {
+        user_data = data
         return
       }
 
@@ -52,11 +51,13 @@
       const parse = Object.fromEntries([...inputs.keys()].map(k => [k, inputs.get(k)]))
   
       const {data, error: _error} = await supabase.from("clinic").insert({...parse, owner: user_data.id}).select();
+      console.log("Submit klinik baru",data);
 
-      
   
       signed = false;
       if (!_error) {
+
+        await supabase.from("user_data").update({clinic: data[0].id}).eq("id", user_data.id);
         error = undefined;
         goto("/app")
       } else {
