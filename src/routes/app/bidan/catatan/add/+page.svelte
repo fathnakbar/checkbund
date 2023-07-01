@@ -4,22 +4,30 @@
 
   let pasien_id;
   let pasien_data;
+  let type;
   let user;
 
   onMount( async () => {
-    pasien_id = window.location.hash.replace("#", ""); // Get the id from the hash
+    let hash = window.location.hash.replace("#", ""); // Get the id from the hash
+    [pasien_id, type] = hash.split(",");
     pasien_data = (await supabase.from("user_data").select("*").eq("id", pasien_id)).data[0];
     user = (await getUserData()).data;
 
   })
+
+  function handleSubmit() {
+    let form = document.forms['catatan'];
+    
+  }
 </script>
 
 
 <div class="min-h-screen bg-gray-100">
     <div class="max-w-md mx-auto py-8">
       <div class="bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-lg font-semibold mb-4">Tambah Catatan Kesehatan</h2>
-        <form>
+        <h2 class="text-lg font-semibold mb-4">Tambah Catatan {type && type[0]?.toUpperCase()}{type?.slice(1)}</h2>
+        <form on:submit={handleSubmit} id="catatan">
+          <input type="text" style="display: none;" value="{type}" name="type">
           <div class="mb-4">
             <label for="nama" class="block text-gray-700 font-medium mb-2">Nama Bumil</label>
             <input type="text" id="nama" name="name" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" value="{pasien_data?.name}" disabled/>
@@ -65,7 +73,7 @@
             <textarea id="keluhan" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"></textarea>
           </div>
           <div class="mb-4">
-            <label for="umur-kehamilan" class="block text-gray-700 font-medium mb-2">Umur Kehamilan</label>
+            <label for="umur-kehamilan" class="block text-gray-700 font-medium mb-2">Umur Kehamilan (bulan)</label>
             <input type="number" id="umur-kehamilan" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500" />
           </div>
           <div class="mb-4">
