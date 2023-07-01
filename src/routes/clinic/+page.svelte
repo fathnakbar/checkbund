@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { guardian, supabase } from "../../lib/client";
+  import { checkClinicOwnership, getSession, getUserData, guardian, supabase } from "../../lib/client";
   import { Button } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import Loading from "../../lib/components/loading.svelte";
@@ -11,8 +11,7 @@
 
   onMount(async () => {
     await guardian();
-    console.log(await checkOwn())
-    if(await checkOwn()){
+    if(await checkClinicOwnership()){
         goto("/app")
         return
     }
@@ -25,27 +24,25 @@
       clinics = clinic_data;
     }
 
-    let { data, error } = await supabase.from("user_data").select("*");
+    let { data, error } = await getUserData();
 
     if (data) {
-      user_data = data[0];
+      user_data = data;
     }
 
     load = true;
   });
 
-  async function checkOwn() {
-    return (await supabase.from("user_data").select("clinic")).data[0]?.clinic;
-  }
-
   function signClinic(id) {
     return async () => {
         load = false;
-        if (await checkOwn()) {
+        if (await checkClinicOwnership()) {
             load = true;
             goto("/app")
             return
         }
+
+        console.log(user_data)
 
       const {error} = await supabase.from('user_data')
             .update({ clinic: id })

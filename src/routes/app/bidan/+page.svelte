@@ -8,6 +8,8 @@
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
   import { getSession, guardian, supabase } from "../../../lib/client";
   import ItemListBumil from "../../../lib/components/ItemListBumil.svelte";
+  import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
+  import ClinicHeader from "../../../lib/components/ClinicHeader.svelte";
 
   let hidden8 = true;
 
@@ -28,7 +30,7 @@
     console.log("Logging:", { klinik, bumil, jadwal, user_data });
 
     if (!klinik) {
-      // goto("/clinic");
+      goto("/clinic");
       return;
     }
 
@@ -76,28 +78,8 @@
 </script>
 
 <div class="w-full flex flex-col h-full p-5">
-  <div class="w-full flex justify-between mb-5">
-    <div class="mb-3">
-      <div class="text-base mb-1 font-bold">{klinik?.name}</div>
-      <span class="text-gray-500 text-sm flex items-center">
-        <!-- <Location class="w-4 h-4 mr-1" /> -->
-        {klinik?.address}
-      </span>
-    </div>
-    <div class="flex items-center ml-3">
-      <Button
-        href={"tel:" + klinik?.contact}
-        size="xs"
-        color="blue"
-        class="rounded-md w-9 h-9"
-        style="border-radius: 50%;"
-      >
-        <Call class="w-7 h-7 text-white" />
-      </Button>
-      <div style="margin: 0 7px" />
-      <button><More height="20px" width="20px" /></button>
-    </div>
-  </div>
+  <ProfileHeader name={user_data?.name}/>
+  <ClinicHeader {klinik} />
 
   <div class="text-sm font-bold mb-3">Pertemuan berikutnya</div>
   <div class="bg-blue-50 border w-full p-5 rounded-md mb-6">

@@ -80,6 +80,22 @@ export async function setSession(_session) {
   return session;
 }
 
+export async function getUserData() {
+  let {id} = (await getSession()).user;
+  let {data, error} = await supabase.from("user_data").select("*").eq("id", id);
+  return data && data.length > 0 && !error ? {data: data[0], error} : {data, error};
+}
+
+export async function checkClinicOwnership() {
+  let {data: {clinic}} = await getUserData()
+  return clinic
+}
+
+export async function logout() {
+  await supabase.auth.signOut();
+  await refreshSession();
+}
+
 export async function refreshSession(){
   const {data: {session}, error} = await supabase.auth.refreshSession(getSession());
   if (error || !session) {

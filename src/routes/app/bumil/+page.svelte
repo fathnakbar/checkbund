@@ -1,8 +1,5 @@
 <script>
   import { Button, CloseButton, A } from "flowbite-svelte";
-  import Call from "../../../lib/assets/icons/call.svelte";
-  import More from "../../../lib/assets/icons/more.svelte";
-  import Location from "../../../lib/assets/icons/location.svelte";
   import ImageKesehatan from "$lib/assets/icons/Kesehatan.png";
   import ImageNifas from "$lib/assets/icons/Nifas.png";
   import { onMount } from "svelte";
@@ -11,7 +8,11 @@
   import BottomSheet from "../../../lib/components/BottomSheet.svelte";
   import Schedule from "../../../lib/assets/icons/schedule.svelte";
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
-  import { guardian, supabase } from "../../../lib/client";
+  import { getUserData, guardian, supabase } from "../../../lib/client";
+  import { getSession } from "../../../lib/client";
+  import ClinicHeader from "../../../lib/components/ClinicHeader.svelte";
+  import Profile from "../../../lib/assets/icons/profile.svelte";
+  import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
 
   let view_daftar = "nifas";
   let hidden8 = true;
@@ -52,34 +53,37 @@
     // let results = await Promise.allSettled(requests());
 
     let req = requests();
-    let user = await req[0];
+    let user = await req[0]
+
+    console.log(user)
+
+    if(!user.data && user.error) {
+      // return
+    }
 
     let results = req[1].map((promise) => {
-      return promise(user.data[0]);
+      return promise(user.data);
     });
 
-    [klinik, catatan, jadwal] = (await Promise.allSettled(results)).map(
+    [klinik, jadwal, catatan] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
     klinik = klinik && klinik[0];
 
-    if (!user.error == "fulfilled") {
-      user_data = user.data[0];
-    }
+    user_data = user.data;
   }
 
   function requests() {
     return [
-      supabase.from("user_data").select("*"),
+      getUserData(),
       [
         ({ clinic }) =>
           clinic && supabase.from("clinic").select("*").eq("id", clinic),
-        ({ id }) => supabase.from("catatan").select("*").eq("pasien", id),
         ({ id }) => supabase.from("jadwal").select("*").eq("pasien", id),
+        ({ id }) => supabase.from("catatan").select("*").eq("pasien", id),
       ],
     ];
   }
-
   function changeView(type) {
     return () => {
       view_daftar = type;
@@ -88,28 +92,8 @@
 </script>
 
 <div class="w-full flex flex-col h-full p-5">
-  <div class="w-full flex justify-between mb-5">
-    <div class="mb-3">
-      <div class="text-base mb-1 font-bold">{klinik?.name}</div>
-      <span class="text-gray-500 text-sm flex items-center">
-        <!-- <Location class="w-4 h-4 mr-1" /> -->
-        {klinik?.address}
-      </span>
-    </div>
-    <div class="flex items-center ml-3">
-      <Button
-        href={"tel:" + klinik?.contact}
-        size="xs"
-        color="blue"
-        class="rounded-md w-9 h-9"
-        style="border-radius: 50%;"
-      >
-        <Call class="w-7 h-7 text-white" />
-      </Button>
-      <div style="margin: 0 7px" />
-      <button><More height="20px" width="20px" /></button>
-    </div>
-  </div>
+  <ProfileHeader name={user_data?.name} />
+  <ClinicHeader {klinik} />
 
   <div class="text-sm font-bold mb-3">Pertemuan berikutnya</div>
   <div class="bg-blue-50 border w-full p-5 rounded-md mb-6">

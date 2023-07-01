@@ -5,6 +5,7 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import { supabase } from '$lib/client';
+  import { checkClinicOwnership, getSession } from '../../../lib/client';
   
     let form = null;
     let signed
@@ -15,7 +16,7 @@
     onMount(async () => {
       await guardian();
 
-      if (await checkOwn()) {
+      if (await checkClinicOwnership()) {
         goto("/app");
         return
       }
@@ -25,31 +26,19 @@
     })
 
     async function hydration() {
-      let results = (await Promise.allSettled(requests())).map(promise => ({...promise.value}))
-      let reject = results.filter(res => res.error).map(err => err.error);
+      let{id} = (await getSession()).user
+      let {data, error} = await supabase.from("user_data").select("*").id("id", id)
 
-      if (reject.length > 0) {
-        error = reject[0].message;
+      if (!error && data && data[0]) {
+        user_data = user.data[0] 
         return
       }
 
-      error = 0;
-
-      let [user] = results;
-
-      user_data = user.data[0]
+      error = "Terjadi kesalahan dalam jaringan!";
     }
 
-    function requests() {
-      return [supabase.from("user_data").select("*")]
-    }
-
-    async function checkOwn() {
-      return (await supabase.from("user_data").select("clinic")).data[0]?.clinic;
-    }
-  
     async function handleSubmit() {
-      if (await checkOwn()) {
+      if (await checkClinicOwnership()) {
         goto("/app");
         return
       }

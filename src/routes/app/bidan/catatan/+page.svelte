@@ -1,3 +1,12 @@
+<script>
+  import { onMount } from "svelte";
+
+  onMount(() => {
+    window.location.hash // Get the id from the hash
+  })
+</script>
+
+
 <div class="min-h-screen bg-gray-100">
     <div class="max-w-md mx-auto py-8">
       <div class="bg-white rounded-lg shadow-lg p-6">
