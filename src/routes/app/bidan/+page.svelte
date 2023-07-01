@@ -6,19 +6,18 @@
   import { goto } from "$app/navigation";
   import Schedule from "../../../lib/assets/icons/schedule.svelte";
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
-  import { guardian, supabase } from "../../../lib/client";
+  import { getSession, guardian, supabase } from "../../../lib/client";
+  import ItemListBumil from "../../../lib/components/ItemListBumil.svelte";
 
-  let view_daftar = "nifas";
   let hidden8 = true;
 
   let user_data;
-  let catatan;
+  let bumil;
   let jadwal;
   let klinik;
   let load = false;
 
   function show() {
-    console.log("Show me!");
     hidden8 = false;
   }
 
@@ -26,14 +25,14 @@
     await guardian();
     await hydration();
 
-    console.log("Logging:", { klinik, catatan, jadwal, user_data });
+    console.log("Logging:", { klinik, bumil, jadwal, user_data });
 
     if (!klinik) {
-      goto("/clinic");
+      // goto("/clinic");
       return;
     }
 
-    if (user_data.role != "bumil") {
+    if (user_data.role != "bidan") {
       goto("/app");
     }
 
@@ -44,31 +43,33 @@
     // let results = await Promise.allSettled(requests());
 
     let req = requests();
-    let user = await req[0];
+    let { user } = await getSession();
+    user = await req[0](user);
+
+    if(!user.data && user.error) {
+      // return
+    }
 
     let results = req[1].map((promise) => {
       return promise(user.data[0]);
     });
 
-    [klinik, catatan, jadwal] = (await Promise.allSettled(results)).map(
+    [klinik, jadwal, bumil] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
     klinik = klinik && klinik[0];
 
-    if (!user.error == "fulfilled") {
-      user_data = user.data[0];
-    }
+    user_data = user.data[0];
   }
 
   function requests() {
     return [
-      supabase.from("user_data").select("*"),
+      ({id}) => supabase.from("user_data").select("*").eq("id", id),
       [
         ({ clinic }) =>
           clinic && supabase.from("clinic").select("*").eq("id", clinic),
-        ({ id }) => supabase.from("catatan").select("*").eq("pasien", id),
         ({ id }) => supabase.from("jadwal").select("*").eq("pasien", id),
-        ({ clinic }) => supabase.from("user_data").select("policies").eq("clinic", clinic).eq("role", "bumil"),
+        ({ clinic }) => supabase.from("user_data").select("*").eq("clinic", clinic).eq("role", "bumil"),
       ],
     ];
   }
@@ -126,9 +127,9 @@
 
   <div class="text-sm font-bold mb-3">Daftar Ibu Hamil</div>
   <ul class="flex-grow">
-    {#if catatan && catatan.length > 0}
-      {#each catatan as item}
-        <ListCatatan {item} on:detail={show} />
+    {#if bumil && bumil.length > 0}
+      {#each bumil as item}
+        <ItemListBumil {...{...item, contact: item.contact.phone}} on:detail={show} />
       {/each}
     {:else}
         <div class="bg-blue-50 rounded-md border p-5">

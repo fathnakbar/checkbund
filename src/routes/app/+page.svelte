@@ -1,6 +1,6 @@
 <script>
   import { Button } from "flowbite-svelte";
-  import { PREFERENCE_KEYS, guardian, supabase } from "../../lib/client";
+  import { PREFERENCE_KEYS, getSession, guardian, supabase } from "../../lib/client";
   import { Preferences } from "@capacitor/preferences";
   import { goto } from "$app/navigation"
   import { onMount } from "svelte";
@@ -23,21 +23,19 @@
   })
 
   async function hydration(){
-    let result = await Promise.allSettled(requests());
+    let result = await requests((await getSession()).user);
 
-    let [user] = result;
-
-    if (user.status == "fulfilled") {
-      if (user.value.error) {
+    if (result.data && result.data.length > 0) {
+      if (result.error) {
         return
       }
 
-      user_data = user.value.data[0];   
+      user_data = result.data[0];   
     }
   }
 
-  function requests() {
-    return [supabase.from("user_data").select("*")]
+  function requests({id}) {
+    return supabase.from("user_data").select("*").eq("id", id)
   }
 
 

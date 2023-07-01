@@ -1,4 +1,4 @@
-import Page from "../pages/ListBumilPage.svelte";
+import Page from "$lib/components/ItemListBumil.svelte";
 
 export default {
   title: 'Page/List Bumil',

@@ -10,10 +10,10 @@
 	"/app/bidan": [
 		"src/routes/+layout.js"
 	],
-	"/app/bumil": [
+	"/app/bidan/catatan": [
 		"src/routes/+layout.js"
 	],
-	"/app/catatan": [
+	"/app/bumil": [
 		"src/routes/+layout.js"
 	],
 	"/app/profile": [
