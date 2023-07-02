@@ -22,11 +22,11 @@
     pasien_data = (
       await supabase.from("user_data").select("*").eq("id", pasien_id)
     ).data[0];
+
     const { data, error } = await supabase
       .from("catatan")
-      .select("*")
+      .select("return_date, created_at,pasien, bidan, type,user_data!catatan_bidan_fkey ( name )")
       .eq("pasien", pasien_id)
-      .eq("bidan", user.id);
 
     if (error && (!data || data.length == 0)) {
       // error
@@ -34,6 +34,8 @@
     }
 
     catatan = data;
+
+    console.log(catatan)
   });
 
   function changeView(type) {
@@ -57,6 +59,7 @@
 
     return age;
   }
+  
   function show() {
     // Redirect to catatan view
   }
@@ -68,19 +71,19 @@
     <div class="grid grid-cols-2 gap-4 mb-4 text-gray-500 text-sm">
       <div>
         <p class="text-sm font-medium">Nama:</p>
-        <p class="text-black">{pasien_data?.name}</p>
+        <p class="text-black">{pasien_data?.name ?? "Tidak terdaftar"}</p>
       </div>
       <div>
         <p class="text-sm font-medium">Umur:</p>
-        <p class="text-black">{calculateAge(pasien_data?.birth)}</p>
+        <p class="text-black">{calculateAge(pasien_data?.birth) ?? "Tidak terdaftar"}</p>
       </div>
       <div>
         <p class="text-sm font-medium">Nama Suami:</p>
-        <p class="text-black">{pasien_data?.husband}</p>
+        <p class="text-black">{pasien_data?.husband ?? "Tidak terdaftar"}</p>
       </div>
       <div>
         <p class="text-sm font-medium">Alamat:</p>
-        <p class="text-black">{pasien_data?.address}</p>
+        <p class="text-black">{pasien_data?.address ?? "Tidak terdaftar"}</p>
       </div>
     </div>
   </div>
@@ -113,8 +116,8 @@
   </div>
   <ul class="flex-grow">
     {#if filtered && filtered.length > 0}
-      {#each filtered as item}
-        <ListCatatan {item} on:detail={show} />
+      {#each filtered as data_catatan}
+        <ListCatatan {data_catatan} on:detail={show} />
       {/each}
     {:else}
       <div class="bg-blue-50 rounded-md border p-5">

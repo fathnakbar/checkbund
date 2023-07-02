@@ -18,7 +18,8 @@ export const nodes = [
 	() => import('./nodes/14'),
 	() => import('./nodes/15'),
 	() => import('./nodes/16'),
-	() => import('./nodes/17')
+	() => import('./nodes/17'),
+	() => import('./nodes/18')
 ];
 
 export const server_loads = [];
@@ -29,16 +30,17 @@ export const dictionary = {
 		"/app/bidan": [5,[2]],
 		"/app/bidan/catatan": [6,[2]],
 		"/app/bidan/catatan/add": [7,[2]],
-		"/app/bumil": [8,[2]],
-		"/app/profile": [9,[2]],
-		"/clinic": [10],
-		"/clinic/new": [11],
-		"/confirm_redirect": [12],
-		"/confirmed": [13],
-		"/landing": [14],
-		"/login": [15],
-		"/register": [16],
-		"/wait_confirm": [17]
+		"/app/bidan/catatan/view": [8,[2]],
+		"/app/bumil": [9,[2]],
+		"/app/profile": [10,[2]],
+		"/clinic": [11],
+		"/clinic/new": [12],
+		"/confirm_redirect": [13],
+		"/confirmed": [14],
+		"/landing": [15],
+		"/login": [16],
+		"/register": [17],
+		"/wait_confirm": [18]
 	};
 
 export const hooks = {
