@@ -5,6 +5,7 @@
   import ListCatatan from "$lib/components/ListCatatan.svelte";
   import { onMount } from "svelte";
   import { getUserData, supabase } from "../../../../lib/client";
+  import Left from "../../../../lib/assets/icons/left.svelte";
 
   let view_daftar = "kesehatan";
   let pasien_id;
@@ -25,7 +26,7 @@
 
     const { data, error } = await supabase
       .from("catatan")
-      .select("return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )")
+      .select("id,return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )")
       .eq("pasien", pasien_id)
 
     if (error && (!data || data.length == 0)) {
@@ -34,8 +35,6 @@
     }
 
     catatan = data;
-
-    console.log(catatan)
   });
 
   function changeView(type) {
@@ -66,7 +65,12 @@
 </script>
 
 <div class="p-5">
-  <div class="text-sm font-bold mb-6">Profil Ibu Hamil</div>
+  <div class="font-bold mb-6 flex items-center">
+    <Button size="xs" href="/app/bidan" color="none" class="mr-1">
+      <Left class="w-5 h-5"/>
+    </Button>
+    Profil Ibu Hamil
+  </div>
   <div class="mb-6">
     <div class="grid grid-cols-2 gap-4 mb-4 text-gray-500 text-sm">
       <div>
@@ -111,13 +115,13 @@
       style="width: 50%;padding: 0;border: 0;"
       class={view_daftar == "KB" ? "shadow-md rounded-3xl" : "opacity-30"}
       on:click={changeView("KB")}
-      ><img src={ImageNifas} alt="Lihat catatan kb" /></button
+      ><img src={ImageNifas} alt="Lihat catatan KB" /></button
     >
   </div>
   <ul class="flex-grow">
     {#if filtered && filtered.length > 0}
-      {#each filtered as data_catatan}
-        <ListCatatan {data_catatan} on:detail={show} />
+      {#each filtered as data_catatan (data_catatan.id)}
+        <ListCatatan {data_catatan} />
       {/each}
     {:else}
       <div class="bg-blue-50 rounded-md border p-5">

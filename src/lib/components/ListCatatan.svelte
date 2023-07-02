@@ -1,12 +1,12 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import LabledValue from "./LabledValue.svelte";
   import Schedule from "../assets/icons/schedule.svelte";
   import { useProps } from "../client";
-  import { each } from "svelte/internal";
   import { formatDate } from "../client";
 
   export let data_catatan;
+
+  console.log(data_catatan)
 
   let notes = useProps(
     data_catatan.catatan ?? {},

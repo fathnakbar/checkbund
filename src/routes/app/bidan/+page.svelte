@@ -110,11 +110,6 @@
 </div>
 
 <style>
-  .devider {
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-  }
   * {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */

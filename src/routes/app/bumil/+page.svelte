@@ -10,7 +10,7 @@
   import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
   import JadwalComponent from "../../../lib/components/JadwalComponent.svelte";
 
-  let view_daftar = "nifas";
+  let view_daftar = "kesehatan";
 
   let user_data;
   let catatan;
@@ -22,6 +22,8 @@
   $: filtered = Array.isArray(catatan)
     ? catatan.filter((item) => item.type == view_daftar)
     : [];
+
+  $: console.log(filtered)
 
   onMount(async () => {
     await guardian();
@@ -78,7 +80,7 @@
         ({ clinic }) =>
           clinic && supabase.from("clinic").select("*").eq("id", clinic),
           () => supabase.from("catatan").select("return_date, user_data!catatan_bidan_fkey ( name, address, contact )").limit(1).gte("return_date", formatDate(Date.now())),
-        ({ id }) => supabase.from("catatan").select("return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )").eq("pasien", id),
+        ({ id }) => supabase.from("catatan").select("id,return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )").eq("pasien", id),
       ],
     ];
   }
@@ -111,14 +113,14 @@
     <button
       color="primary"
       style="width: 50%;padding: 0;border: 0;"
-      class={view_daftar == "nifas" ? "shadow-md rounded-3xl" : "opacity-30"}
-      on:click={changeView("nifas")}
-      ><img src={ImageNifas} alt="Lihat catatan nifas" /></button
+      class={view_daftar == "KB" ? "shadow-md rounded-3xl" : "opacity-30"}
+      on:click={changeView("KB")}
+      ><img src={ImageNifas} alt="Lihat catatan KB" /></button
     >
   </div>
   <ul class="flex-grow">
     {#if filtered && filtered.length > 0}
-      {#each filtered as data_catatan}
+      {#each filtered as data_catatan (data_catatan.id)}
         <ListCatatan {data_catatan} />
       {/each}
     {:else}
@@ -135,11 +137,6 @@
 </div>
 
 <style>
-  .devider {
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-  }
   * {
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
