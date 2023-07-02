@@ -59,6 +59,30 @@ export async function getSession() {
   return session && await setSession(session);
 }
 
+export function calculateRemainingDays(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  
+  const timeDifference = end - start;
+  const remainingDays = Math.ceil(timeDifference / millisecondsPerDay);
+  
+  return remainingDays;
+}
+
+
+export function formatDate(dateString) {
+  const date = new Date(dateString);
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  const formatter = new Intl.DateTimeFormat("en-US", options);
+
+  return dateString ? formatter.format(date) : "Tidak tersedia";
+}
+
 export async function setSession(_session) {
   // Set the supabase client session (this method validate session keys and set client session)
   const {

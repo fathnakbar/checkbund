@@ -4,6 +4,7 @@
   import Schedule from "../assets/icons/schedule.svelte";
   import { useProps } from "../client";
   import { each } from "svelte/internal";
+  import { formatDate } from "../client";
 
   export let data_catatan;
 
@@ -23,18 +24,6 @@
   $: info = show_detail
     ? Object.entries(amount)
     : Object.entries(amount).slice(0, 2);
-
-  function formatDate(dateString) {
-    const date = new Date(dateString);
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    const formatter = new Intl.DateTimeFormat("en-US", options);
-
-    return dateString ? formatter.format(date) : "Tidak tersedia";
-  }
 
   function toggleDetail() {
     show_detail = !show_detail;

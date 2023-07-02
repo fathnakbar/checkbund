@@ -4,13 +4,11 @@
   import ImageNifas from "$lib/assets/icons/Nifas.png";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import LabledValue from "../../../lib/components/LabledValue.svelte";
-  import BottomSheet from "../../../lib/components/BottomSheet.svelte";
-  import Schedule from "../../../lib/assets/icons/schedule.svelte";
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
-  import { getUserData, guardian, supabase } from "../../../lib/client";
+  import { getUserData, guardian, supabase, formatDate } from "../../../lib/client";
   import ClinicHeader from "../../../lib/components/ClinicHeader.svelte";
   import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
+  import JadwalComponent from "../../../lib/components/JadwalComponent.svelte";
 
   let view_daftar = "nifas";
 
@@ -65,6 +63,9 @@
     [klinik, jadwal, catatan] = (await Promise.allSettled(results)).map(
       (res) => res.value?.data
     );
+
+    jadwal = jadwal && jadwal[0]
+
     klinik = klinik && klinik[0];
 
     user_data = user.data;
@@ -76,7 +77,7 @@
       [
         ({ clinic }) =>
           clinic && supabase.from("clinic").select("*").eq("id", clinic),
-        ({ id }) => supabase.from("jadwal").select("*").eq("pasien", id),
+          () => supabase.from("catatan").select("return_date, user_data!catatan_bidan_fkey ( name, address, contact )").limit(1).gte("return_date", formatDate(Date.now())),
         ({ id }) => supabase.from("catatan").select("return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )").eq("pasien", id),
       ],
     ];
@@ -93,30 +94,7 @@
   <ClinicHeader {klinik} />
 
   <div class="text-sm font-bold mb-3">Pertemuan berikutnya</div>
-  <div class="bg-blue-50 border w-full p-5 rounded-md mb-6">
-    {#if !jadwal || jadwal.length == 0}
-      <div class="text-center text-gray-500 text-sm">
-        Anda belum memiliki jadwal temu
-      </div>
-    {:else}
-      <div class="text-sm text-blue-500 flex items-center">
-        <Schedule class="w-4 h-4 mr-1" style="margin-bottom: 1px;" />
-        23 Juni 2023
-        <span class="mx-2 bg-blue-500 devider" />
-        09:45
-      </div>
-      <div class="my-5">
-        <b>Bidan Nita</b>
-        <div class="text-sm">Klinik bidan nita, Bandung</div>
-      </div>
-      <div class="flex justify-between">
-        <span class="text-sm text-gray-500">2 hari lagi</span>
-        <button class="text-xs p-2 rounded-md bg-blue-500 text-white"
-          >Hubungi</button
-        >
-      </div>
-    {/if}
-  </div>
+  <JadwalComponent {jadwal} />
 
   <div class="text-sm font-bold mb-3">Daftar Catatan</div>
   <div class="w-full flex items-center justify-center mb-6">
