@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { getUserData, supabase } from "$lib/client";
+  import { getUserData, supabase, useProps } from "$lib/client";
   import { goto } from "$app/navigation"
 
   let pasien_id;
@@ -24,7 +24,7 @@
 
     let catatan = useProps(
       values,
-      "metode_kontrasepsi,tekanan_darah,berat_badan,keluhan,umur_kehamilan,linkgar_perut,hasil_pemeriksaan,nasihat"
+      "metode_kontrasepsi,tekanan_darah,berat_badan,keluhan,umur_kehamilan,lingkar_perut,hasil_pemeriksaan,nasihat"
     );
 
     console.log("Catatan", catatan);
@@ -44,17 +44,6 @@
         goto("/app/bidan/catatan#" + pasien_id)
         return
       }
-  }
-
-  function useProps(target, keys) {
-    let len = target.length;
-    if (!Array.isArray(target)) {
-      target = Object.entries(target);
-    }
-
-    return Object.fromEntries(
-      target.filter(([key, value]) => keys.includes(key))
-    );
   }
 </script>
 
@@ -138,7 +127,7 @@
           >
           <input
             type="text"
-            name="metode-kontrasepsi"
+            name="metode_kontrasepsi"
             id="metode-kontrasepsi"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
           />

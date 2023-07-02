@@ -25,7 +25,7 @@
 
     const { data, error } = await supabase
       .from("catatan")
-      .select("return_date, created_at,pasien, bidan, type,user_data!catatan_bidan_fkey ( name )")
+      .select("return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )")
       .eq("pasien", pasien_id)
 
     if (error && (!data || data.length == 0)) {

@@ -86,6 +86,17 @@ async function getUser() {
   
 }
 
+export function useProps(target, keys) {
+  let len = target.length;
+  if (!Array.isArray(target)) {
+    target = Object.entries(target);
+  }
+
+  return Object.fromEntries(
+    target.filter(([key, value]) => keys.includes(key))
+  );
+}
+
 export async function getUserData() {
   let {id} = await getUser();
   let {data, error} = await supabase.from("user_data").select("*").eq("id", id);
