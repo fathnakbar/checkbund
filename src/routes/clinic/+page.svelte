@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { checkClinicOwnership, getSession, getUserData, guardian, supabase } from "../../lib/client";
+  import { guardian } from "$lib/client";
   import { Button } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import Loading from "../../lib/components/loading.svelte";

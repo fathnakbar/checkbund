@@ -28,12 +28,6 @@
 	"/clinic/new": [
 		"src/routes/+layout.js"
 	],
-	"/confirm_redirect": [
-		"src/routes/+layout.js"
-	],
-	"/confirmed": [
-		"src/routes/+layout.js"
-	],
 	"/landing": [
 		"src/routes/+layout.js"
 	],
@@ -41,9 +35,6 @@
 		"src/routes/+layout.js"
 	],
 	"/register": [
-		"src/routes/+layout.js"
-	],
-	"/wait_confirm": [
 		"src/routes/+layout.js"
 	]
 }

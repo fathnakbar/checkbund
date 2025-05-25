@@ -1,11 +1,9 @@
 <script>
     import { Label, Input, Button, Checkbox, Textarea } from 'flowbite-svelte'
     import { Spinner } from 'flowbite-svelte';
-    import { guardian, setSession, signIn } from '$lib/client';
+    import { guardian } from '$lib/client';
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
-    import { supabase } from '$lib/client';
-    import { checkClinicOwnership, getSession, getUserData } from '../../../lib/client';
     import api from "$lib/sdk"
   
     let form = null;
@@ -47,10 +45,8 @@
 
 
     function useMyNumber() {
-      if (user_data?.contact?.phone) {
-        form['contact'].value = user_data.contact.phone
-      } else {
-        hydration();
+      if (user_data?.phone) {
+        form['contact'].value = user_data.phone
       }
     }
   </script>

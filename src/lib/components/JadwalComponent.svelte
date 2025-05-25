@@ -22,7 +22,7 @@
       </div>
       <div class="flex justify-between">
         <span class="text-sm text-gray-500">{calculateRemainingDays(Date.now(), jadwal.return_date)} hari lagi</span>
-        <Button size="xs" color="blue" href="tel:{jadwal.user_data.contact.phone}">Hubungi</Button>
+        <Button size="xs" color="blue" href="tel:{jadwal.user_data.contact}">Hubungi</Button>
       </div>
     {/if}
   </div>

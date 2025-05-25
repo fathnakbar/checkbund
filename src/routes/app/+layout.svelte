@@ -1,19 +1,18 @@
 <script>
-    import { goto } from "$app/navigation"
-    import { onMount } from "svelte";
-    import { profile } from "$lib/store"
-    import api from "$lib/sdk"
+  import { onMount } from "svelte";
+  import { guardian } from "$lib/client";
+  import api from "$lib/sdk"
+  import { goto } from "$app/navigation";
 
-    onMount(async () => {
-        // Fix session, when user disconected it logout
-        
-        const request = await api.getMyProfile()
-        if (!request.success) {
-            goto("/")
-        }
+  onMount(async () => {
+    guardian();
+    const requestMyProfile = await api.getMyProfile()
+    if(!requestMyProfile.success) {
+        api.clearToken()
+        await goto("/")
+    }
 
-        profile.set()
-    })
+  });
 </script>
 
-<slot></slot>
+<slot />

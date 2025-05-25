@@ -29,11 +29,20 @@
     let user = await api.getMyProfile()
     user_data = user.data
 
-    ([klinik, jadwal, bumil] = (await Promise.allSettled([
-      api.getClinicDetails(user_data.clinic),
+    console.log(user, user_data)
+
+    let requests = await Promise.allSettled([
+      user_data.clinic && api.getClinicDetails(user_data.clinic.id),
       api.getNextAppointment(),
-      api.getClinicPatients(user_data.clinic)
-    ])).map(request => request.data))
+      user_data.clinic && api.getClinicPatients(user_data.clinic.id)
+    ])
+
+    requests = Array.from(requests).map(request => request.value?.data)
+
+    klinik = requests[0];
+    jadwal = requests[1];
+    bumil = requests[2];
+
 
     if (!klinik) {
       goto("/clinic");
@@ -51,7 +60,9 @@
 
 <div class="w-full flex flex-col h-full p-5">
   <ProfileHeader name={user_data?.name}/>
-  <ClinicHeader {klinik} />
+  {#if klinik}
+    <ClinicHeader {klinik} />
+  {/if}
 
   <div class="text-sm font-bold mb-3">Pertemuan berikutnya</div>
   <JadwalComponent {jadwal} />
@@ -60,7 +71,7 @@
   <ul class="flex-grow w-full">
     {#if bumil && bumil.length > 0}
       {#each bumil as item}
-        <ItemListBumil {...{...item, contact: item.contact.phone}} on:detail={show} />
+        <ItemListBumil {...{...item, contact: item.phone}} on:detail={show} />
       {/each}
     {:else}
         <div class="bg-blue-50 rounded-md border p-5">

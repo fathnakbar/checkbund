@@ -31,11 +31,11 @@
     let user = await api.getMyProfile();
     user_data = user.data
 
-    ([klinik, jadwal, catatan] = await Promise.allSettled([
-      user_data.clinic && api.getClinicDetails(user_data.clinic),
+    ([klinik, jadwal, catatan] = Array.from(await Promise.allSettled([
+      user_data.clinic && api.getClinicDetails(user_data.clinic.id),
       api.getNextAppointment(),
       user_data.id && api.getAllCatatanForPatient(user_data.id),
-    ])).map(request => request.data)
+    ])).map(request => request.value?.data))
 
     if (!klinik) {
       goto("/clinic");
