@@ -5,12 +5,23 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import clinicRoutes from './routes/clinics.js';
 import catatanRoutes from './routes/catatan.js';
+import cors from 'cors';
 
 dotenv.config(); // Memuat variabel lingkungan dari .env
 
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3000;
+
+
+// Konfigurasi CORS
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*', // Izinkan semua origin dalam development
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
 
 // Middleware
 app.use(express.json()); // Untuk mengurai body JSON dari permintaan
