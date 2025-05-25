@@ -1,0 +1,101 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // <-- Ubah provider menjadi "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- Model Pengguna (User) ---
+model User {
+  id        String    @id @default(uuid()) // UUID tetap didukung oleh SQLite di Prisma
+  email     String    @unique
+  password  String
+  name      String
+  phone     String
+  address   String
+  role      UserRole  // Enum untuk peran (Bidan atau Bumil)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relasi opsional ke klinik yang dipilih pengguna (misalnya oleh Bumil)
+  clinicId  String?
+  clinic    Clinic?   @relation("UserToClinicAffiliation", fields: [clinicId], references: [id])
+
+  // Relasi khusus peran (opsional, tergantung kebutuhan)
+  bidanProfile  BidanProfile?
+  bumilProfile  BumilProfile?
+
+  catatanPasien Catatan[] @relation("PasienCatatan")
+  catatanBidan  Catatan[] @relation("BidanCatatan")
+
+  ownedClinics Clinic[] @relation("ClinicOwner")
+}
+
+// --- Model Peran Pengguna ---
+enum UserRole {
+  bumil
+  bidan
+}
+
+// --- Model Profil Bidan (Opsional) ---
+model BidanProfile {
+  id      String @id @default(uuid())
+  userId  String @unique
+  user    User   @relation(fields: [userId], references: [id])
+  no_str  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- Model Profil Ibu Hamil (Opsional) ---
+model BumilProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  birth     DateTime
+  husband   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+// --- Model Klinik ---
+model Clinic {
+  id        String    @id @default(uuid())
+  name      String
+  contact   String
+  address   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  ownerId   String
+  owner     User      @relation("ClinicOwner", fields: [ownerId], references: [id])
+
+  users     User[]    @relation("UserToClinicAffiliation")
+  catatan   Catatan[]
+}
+
+// --- Model Catatan Medis (Catatan) ---
+model Catatan {
+  id              String   @id @default(uuid())
+  catatanData     Json     @map("catatan") // Tipe Json juga didukung oleh SQLite di Prisma
+  type            String
+  return_date     DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  pasienId        String
+  pasien          User     @relation("PasienCatatan", fields: [pasienId], references: [id])
+
+  bidanId         String
+  bidan           User     @relation("BidanCatatan", fields: [bidanId], references: [id])
+
+  clinicId        String
+  clinic          Clinic   @relation(fields: [clinicId], references: [id])
+}
