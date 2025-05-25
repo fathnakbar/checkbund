@@ -13,12 +13,6 @@ RUN npm install
 # Salin semua file proyek
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma db push
-
-# Generate Prisma client
-RUN npx prisma generate
-
 # Expose port yang digunakan aplikasi
 EXPOSE 3000
 
