@@ -54,10 +54,6 @@ router.post('/login', async (req, res) => {
     // Cari pengguna berdasarkan email
     const user = await req.prisma.user.findUnique({
       where: { email },
-      include: {
-        bidanProfile: role === 'bidan', // Termasuk profil bidan jika peran bidan
-        bumilProfile: role === 'bumil', // Termasuk profil bumil jika peran bumil
-      }
     });
 
     if (!user) {
@@ -75,7 +71,7 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       JWT_SECRET,
-      { expiresIn: '1h' } // Token berlaku 1 jam
+      { expiresIn: '7d' } // Token berlaku 7 hari
     );
 
     // Saring data pengguna sebelum dikirim

@@ -7,14 +7,13 @@ const router = Router();
 router.get('/me', authenticateToken, async (req, res) => {
   try {
     // req.user berisi data pengguna dari token (id, email, role)
-    const user = await req.prisma.user.findUnique({
+    const {password, ...user} = await req.prisma.user.findUnique({
       where: { id: req.user.id },
       include: {
         clinic: true, // Termasuk data klinik jika terhubung
         bidanProfile: req.user.role === 'bidan', // Termasuk profil bidan jika peran bidan
         bumilProfile: req.user.role === 'bumil', // Termasuk profil bumil jika peran bumil
-      },
-      select: { password: false } // Jangan kembalikan password
+      }
     });
 
     if (!user) {
@@ -30,16 +29,9 @@ router.get('/me', authenticateToken, async (req, res) => {
 
 // GET /api/v1/users/next-appointment (Jadwal pertemuan berikutnya)
 router.get('/next-appointment', authenticateToken, async (req, res) => {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const authenticatedUserId = req.user.id;
     const authenticatedUserRole = req.user.role;
-
-    // Otorisasi berdasarkan role
-    if (userId !== authenticatedUserId) {
-      return res.status(403).json({ 
-        message: `Akses ditolak. Anda tidak memiliki izin untuk melihat jadwal ${authenticatedUserRole === 'bumil' ? 'pasien' : 'bidan'} lain.` 
-      });
-    }
 
     try {
       // Tentukan query berdasarkan role
