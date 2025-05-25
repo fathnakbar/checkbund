@@ -50,6 +50,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email dan password harus diisi' });
+  }
+
   try {
     // Cari pengguna berdasarkan email
     const user = await req.prisma.user.findUnique({
@@ -58,6 +62,10 @@ router.post('/login', async (req, res) => {
 
     if (!user) {
       return res.status(400).json({ message: 'Kredensial tidak valid.' });
+    }
+
+    if (!user.password) {
+      return res.status(500).json({ message: 'Data user tidak valid' });
     }
 
     // Bandingkan password yang diberikan dengan hash yang tersimpan

@@ -20,7 +20,7 @@ router.post('/', authenticateToken, authorizeRole('bidan'), async (req, res) => 
         bidan: { connect: { id: bidan } },
         type,
         catatanData: catatan, // Simpan objek catatan sebagai Json
-        return_date: new Date(return_date),
+        return_date: return_date && new Date(return_date),
         clinic: { connect: { id: clinic } },
       }
     });

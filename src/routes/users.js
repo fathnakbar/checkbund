@@ -107,14 +107,13 @@ router.get('/:id', authenticateToken, async (req, res) => {
   const authenticatedUserRole = req.user.role;
 
   try {
-    const user = await req.prisma.user.findUnique({
+    const {password, ...user} = await req.prisma.user.findUnique({
       where: { id },
       include: {
         clinic: true,
         bidanProfile: true, // Sertakan profil bidan
         bumilProfile: true, // Sertakan profil bumil
       },
-      select: { password: false } // Jangan kembalikan password
     });
 
     if (!user) {
@@ -152,7 +151,7 @@ router.get('/:id/catatan', authenticateToken, async (req, res) => {
         include: {
           bidan: { select: { name: true } } // Hanya ambil nama bidan
         },
-        orderBy: { created_at: 'desc' } // Urutkan dari yang terbaru
+        orderBy: { createdAt: 'desc' } // Urutkan dari yang terbaru
       });
   
       // Format output agar sesuai dengan frontend (catatanData diurai)
@@ -201,10 +200,9 @@ router.patch('/:id', authenticateToken, async (req, res) => {
       // Contoh: await req.prisma.bidanProfile.update(...)
     }
 
-    const updatedUser = await req.prisma.user.update({
+    const {password, ...updatedUser} = await req.prisma.user.update({
       where: { id },
       data: updateData,
-      select: { password: false } // Jangan kembalikan password
     });
 
     // Jika no_str diperbarui dan menggunakan BidanProfile terpisah
