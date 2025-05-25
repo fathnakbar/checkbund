@@ -5,20 +5,17 @@
   import { goto } from "$app/navigation"
   import { onMount } from "svelte";
   import Loading from "../../lib/components/loading.svelte";
+  import api from "$lib/sdk"
 
   let load = false;
-  let user_data;
-  let error;
-
+ 
   onMount(async () => {
     await guardian();
 
-    user_data = (await getUserData()).data;
+    const request = await api.getMyProfile()
 
-    console.dir(user_data)
-
-    if (user_data) {
-      goto("/app/" + user_data.role || "");
+    if (request.success) {
+      goto("/app/" + request.data.role);
     }
 
     load = true;

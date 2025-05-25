@@ -4,8 +4,8 @@
   import ImageNifas from "$lib/assets/icons/Nifas.png";
   import ListCatatan from "$lib/components/ListCatatan.svelte";
   import { onMount } from "svelte";
-  import { getUserData, supabase } from "../../../../lib/client";
   import Left from "../../../../lib/assets/icons/left.svelte";
+  import api from "$lib/sdk"
 
   let view_daftar = "kesehatan";
   let pasien_id;
@@ -18,23 +18,10 @@
 
   onMount(async () => {
     pasien_id = window.location.hash.replace("#", "");
-    const { data: user } = await getUserData();
-
-    pasien_data = (
-      await supabase.from("user_data").select("*").eq("id", pasien_id)
-    ).data[0];
-
-    const { data, error } = await supabase
-      .from("catatan")
-      .select("id,return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )")
-      .eq("pasien", pasien_id)
-
-    if (error && (!data || data.length == 0)) {
-      // error
-      return;
-    }
-
-    catatan = data;
+    const requestPasien = await api.getUserProfile(pasien_id)
+    const requestCatatan = await api.getAllCatatanForPatient(pasien_id)
+    pasien_data = requestPasien.data
+    catatan = requestCatatan.data;
   });
 
   function changeView(type) {

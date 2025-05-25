@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import { Preferences } from '@capacitor/preferences';
   import { goto } from "$app/navigation";
+  import api from "$lib/sdk"
 
   let role = "bumil";
   let form = null;
@@ -20,6 +21,7 @@
   let form_submitted = false;
   let password_err = "";
   let confirm_err = "";
+  let error_alert = ""
   let type = "password";
   let show=()=>{
     if(type=="password"){
@@ -55,10 +57,10 @@
 
     // TODO: Update input validation!!!
 
+    error_alert = ""
+
     
     const inputs = Object.fromEntries(Array.from(form.querySelectorAll("input")).map(e => [e.name, e.value]));
-
-    console.log(inputs)
 
     const validation = [inputs.password.length < 8, inputs.password != inputs.confirm, !role]; // Error expression
 
@@ -77,15 +79,14 @@
 
     if (validation.filter(e => e == true).length == 0) {
       form_submitted = true;
-      const {data: {user}, error} = await signUp({email: inputs.email, password: inputs.password})
-      if (!error && user) {
-        await Preferences.set({
-          key: PREFERENCE_KEYS.HAS_SIGNUP,
-          value: JSON.stringify({user, inputs})
-        })
-
-        goto("/wait_confirm")
+      const request = await api.register(inputs)
+      
+      if(!request.success) {
+        error_alert = request.message ?? "Tidak dapat mendaftarkan"
+        return
       }
+
+      goto("/login")
 
     }
   }
@@ -108,6 +109,12 @@
         <div class="text-red-500 text-sm mt-3">Pilih salah satu peran di atas</div>
       {/if}
     </div>
+    {#if error_alert}
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Error!</strong>
+        <span class="block sm:inline">{error_alert}</span>
+      </div>
+    {/if}
     <div class="mb-6">
       <Label for="input-group-1" class="block mb-2">Nama Lengkap</Label>
       <Input name="name" type="text" placeholder="cth: Gadila Asa Penjuru" required/>

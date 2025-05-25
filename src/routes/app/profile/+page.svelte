@@ -1,20 +1,19 @@
 <script>
   import { Button } from "flowbite-svelte";
-  import { getUserData, logout } from "../../../lib/client";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
+  import api from "$lib/sdk"
 
 
   let user;
 
   onMount(async () => {
-    const {data} = await getUserData();
-    console.log(data)
-    user = data
+    const request = await api.getMyProfile();
+    user = request.data
   })
 
-  async function _logout() {
-    await logout();
+  async function logout() {
+    api.clearToken()
     goto("/")
   }
 
@@ -45,7 +44,7 @@
             </div>
           </li>
           <li class="p-4">
-            <Button on:click={_logout}>Logout</Button>
+            <Button on:click={logout}>Logout</Button>
           </li>
         </ul>
       </div>

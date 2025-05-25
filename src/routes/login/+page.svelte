@@ -7,6 +7,7 @@
   import { guardian, setSession, signIn } from '../../lib/client';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import api from "$lib/sdk"
 
   let form = null;
   let signed
@@ -29,19 +30,19 @@
     const inputs = new FormData(form)
     const parse = Object.fromEntries([...inputs.keys()].map(k => [k, inputs.get(k)]))
 
-    const {data: {session}, error: _error} = await signIn(parse);
+    const request = await api.login(parse)
 
     signed = false;
 
 
-    if (_error && !session) {
-      error = _error.message;
+    if (!request.success) {
+      error = request.message;
       return
     }
 
-    await setSession(session)
     goto("/")
   }
+
 </script>
 
 <div class="p-7">

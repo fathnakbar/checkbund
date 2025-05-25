@@ -11,10 +11,10 @@
 <div class="container w-full flex flex-col h-full items-center justify-center">
   <div class="my-11"></div>
   <img src={IlustrasiBidan} alt="Ilustrasi bidan sedang menggendong bayi" />
-  <span class="text-2xl font-bold">Checkbund</span>
+  <span class="text-2xl font-bold">MyBunda</span>
 
   <p class="text-bg text-center">
-    Checkbund, teman setia ibu hamil dan bidan dalam perjalanan kehamilan yang
+    MyBunda, teman setia ibu hamil dan bidan dalam perjalanan kehamilan yang
     lancar!
   </p>
   <div class="button-group flex items-center justify-center my-5">

@@ -5,65 +5,42 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import { supabase } from '$lib/client';
-  import { checkClinicOwnership, getSession, getUserData } from '../../../lib/client';
+    import { checkClinicOwnership, getSession, getUserData } from '../../../lib/client';
+    import api from "$lib/sdk"
   
     let form = null;
     let signed
-    let google_signed
     let user_data;
     let error;
   
     onMount(async () => {
       await guardian();
 
-      if (await checkClinicOwnership()) {
+      let requestMyProfile = await api.getMyProfile()
+      user_data = requestMyProfile.data
+
+      if (user_data?.clinic) {
         goto("/app");
         return
       }
-
-
-      await hydration();
     })
 
-    async function hydration() {
-      const {data, error: _error} = await getUserData();
-
-      if (!_error && data) {
-        user_data = data
-        return
-      }
-
-      error = "Terjadi kesalahan dalam jaringan!";
-    }
-
     async function handleSubmit() {
-      if (await checkClinicOwnership()) {
+      if (user_data?.clinic) {
         goto("/app");
         return
-      }
-
-      if (!user_data) {
-        await hydration();
       }
 
       signed = true;
       const inputs = new FormData(form)
       const parse = Object.fromEntries([...inputs.keys()].map(k => [k, inputs.get(k)]))
   
-      const {data, error: _error} = await supabase.from("clinic").insert({...parse, owner: user_data.id}).select();
-      console.log("Submit klinik baru",data);
+      const requestCreateClinic = await api.createClinic(parse)
 
-  
       signed = false;
-      if (!_error) {
-
-        await supabase.from("user_data").update({clinic: data[0].id}).eq("id", user_data.id);
-        error = undefined;
+      if (requestCreateClinic.success) {
         goto("/app")
       } else {
-        // Error Hanlder
-
-        console.log(_error)
         error = _error.message;
       }
     }
@@ -103,7 +80,7 @@
         <Label class="block mb-2">Alamat Klinik</Label>
         <Textarea name="address" placeholder="Masukkan alamat klinik" required/>
       </div>
-      <Button class="w-full" color="primary" type="submit" disabled={google_signed}>Daftar Klinik{#if signed}<Spinner class="mx-3" size={4}/>{/if}</Button>
+      <Button class="w-full" color="primary" type="submit" disabled={signed}>Daftar Klinik{#if signed}<Spinner class="mx-3" size={4}/>{/if}</Button>
     </form>
 
   </div>

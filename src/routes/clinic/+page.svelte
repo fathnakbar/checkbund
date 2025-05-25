@@ -4,6 +4,7 @@
   import { Button } from "flowbite-svelte";
   import { goto } from "$app/navigation";
   import Loading from "../../lib/components/loading.svelte";
+  import api from "$lib/sdk"
 
   let user_data;
   let clinics = [];
@@ -11,23 +12,22 @@
 
   onMount(async () => {
     await guardian();
-    if(await checkClinicOwnership()){
+
+    let requestClinics = await api.getAllClinics()
+
+    if (requestClinics.success) {
+      clinics = requestClinics.data;
+    }
+
+    let requestMyProfile = await api.getMyProfile()
+
+    if (requestMyProfile.success) {
+      user_data = requestMyProfile.data;
+    }
+
+    if(user_data?.clinic){
         goto("/app")
         return
-    }
-
-    let { data: clinic_data, error: _error } = await supabase
-      .from("clinic")
-      .select("*");
-
-    if (clinic_data) {
-      clinics = clinic_data;
-    }
-
-    let { data, error } = await getUserData();
-
-    if (data) {
-      user_data = data;
     }
 
     load = true;
@@ -36,18 +36,15 @@
   function signClinic(id) {
     return async () => {
         load = false;
-        if (await checkClinicOwnership()) {
-            load = true;
+
+        if(user_data?.clinic){
             goto("/app")
             return
         }
 
-        console.log(user_data)
+      const requestUpdateProfile = await api.updateProfile(user_data.id, { clinic: id })
 
-      const {error} = await supabase.from('user_data')
-            .update({ clinic: id })
-            .eq('id', user_data.id)
-      if (!error) {
+      if (requestUpdateProfile.success) {
         load = true;
         goto("/app")
 

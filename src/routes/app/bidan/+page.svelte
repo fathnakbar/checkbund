@@ -9,6 +9,8 @@
   import { Button } from "flowbite-svelte";
   import JadwalComponent from "../../../lib/components/JadwalComponent.svelte";
 
+  import api from "$lib/sdk"
+
   let hidden8 = true;
 
   let user_data;
@@ -23,9 +25,15 @@
 
   onMount(async () => {
     await guardian();
-    await hydration();
+    
+    let user = await api.getMyProfile()
+    user_data = user.data
 
-    console.log("Logging:", { klinik, bumil, jadwal, user_data });
+    ([klinik, jadwal, bumil] = (await Promise.allSettled([
+      api.getClinicDetails(user_data.clinic),
+      api.getNextAppointment(),
+      api.getClinicPatients(user_data.clinic)
+    ])).map(request => request.data))
 
     if (!klinik) {
       goto("/clinic");
@@ -39,43 +47,6 @@
     load = true;
   });
 
-  async function hydration() {
-    // let results = await Promise.allSettled(requests());
-
-    let req = requests();
-    let { user } = await getSession();
-    user = await req[0](user);
-
-    if(!user.data && user.error) {
-      // return
-    }
-
-    let results = req[1].map((promise) => {
-      return promise(user.data[0]);
-    });
-
-    [klinik, jadwal, bumil] = (await Promise.allSettled(results)).map(
-      (res) => res.value?.data
-    );
-
-    jadwal = Array.isArray(jadwal) && jadwal[0]
-
-    klinik = klinik && klinik[0];
-
-    user_data = user.data[0];
-  }
-
-  function requests() {
-    return [
-      ({id}) => supabase.from("user_data").select("*").eq("id", id),
-      [
-        ({ clinic }) =>
-          clinic && supabase.from("clinic").select("*").eq("id", clinic),
-        () => supabase.from("catatan").select("return_date, user_data!catatan_pasien_fkey ( name, address, contact )").limit(1).gte("return_date", formatDate(Date.now())),
-        ({ clinic }) => supabase.from("user_data").select("*").eq("clinic", clinic).eq("role", "bumil"),
-      ],
-    ];
-  }
 </script>
 
 <div class="w-full flex flex-col h-full p-5">

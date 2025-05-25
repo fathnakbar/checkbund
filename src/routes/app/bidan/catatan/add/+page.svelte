@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { getUserData, supabase, useProps } from "$lib/client";
   import { goto } from "$app/navigation"
+  import api from "$lib/sdk"
 
   let pasien_id;
   let pasien_data;
@@ -11,10 +12,10 @@
   onMount(async () => {
     let hash = window.location.hash.replace("#", ""); // Get the id from the hash
     [pasien_id, type] = hash.split(",");
-    pasien_data = (
-      await supabase.from("user_data").select("*").eq("id", pasien_id)
-    ).data[0];
-    user = (await getUserData()).data;
+    const requestPasien = await api.getUserProfile(pasiend_id)
+    const requestMyProfile = await api.getMyProfile()
+    pasien_data = requestPasien.data
+    user = requestMyProfile.data
   });
 
   async function handleSubmit() {
@@ -27,7 +28,6 @@
       "metode_kontrasepsi,tekanan_darah,berat_badan,keluhan,umur_kehamilan,lingkar_perut,hasil_pemeriksaan,nasihat"
     );
 
-    console.log("Catatan", catatan);
 
     const {error} = await supabase
       .from("catatan")

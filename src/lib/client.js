@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { goto } from "$app/navigation";
 import { Preferences } from "@capacitor/preferences";
+import api from "$lib/sdk"
 
 const supabaseUrl = "https://oqqhpyblhwtewhcloioy.supabase.co";
 const supabaseKey =
@@ -104,11 +105,6 @@ export async function setSession(_session) {
   return session;
 }
 
-async function getUser() {
-  let {user} = await getSession();
-  return user ?? await supabase.auth.getUser();
-  
-}
 
 export function useProps(target, keys) {
   let len = target.length;
@@ -122,14 +118,7 @@ export function useProps(target, keys) {
 }
 
 export async function getUserData() {
-  let {id} = await getUser();
-  let {data, error} = await supabase.from("user_data").select("*").eq("id", id);
-  return data && data.length > 0 && !error ? {data: data[0], error} : {data, error};
-}
-
-export async function checkClinicOwnership() {
-  let {data: {clinic}} = await getUserData()
-  return clinic
+  return await api.getMyProfile();
 }
 
 async function clearSession(){
@@ -159,36 +148,16 @@ export async function guardian(){
   const path = new URL(window.location).pathname;
 
   const unprotected_path = /(\/login|\/register|\/landing|\/confirmed|\/wait_confirm)/g;
-  const isLoggedIn = await getSession();
-
-  // console.log(isLoggedIn && path.match(unprotected_path), path)
-
+  const isLoggedIn = await api.getToken();
 
   if (isLoggedIn && path.match(unprotected_path)) {
-      console.log("User have session", isLoggedIn)
-      goto("/app")
-
+    goto("/app")
     return false
   }
 
   if (!isLoggedIn && !path.match(unprotected_path)) {
 
-    console.log("User doesn't have session")
-
-    // Check if the user has signup
-    let {value: signup} = await Preferences.get({key: PREFERENCE_KEYS.HAS_SIGNUP})
-    signup = JSON.parse(signup);
-    
-    if (signup) {
-      if (signup.confirmed) {
-        goto("/confirmed")
-      } else {
-        goto("/wait_confirm")
-      }
-    } else {
-      goto("/landing")
-    }
-
+    goto("/landing")
     return false
   }
 

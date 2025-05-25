@@ -5,7 +5,8 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import ListCatatan from "../../../lib/components/ListCatatan.svelte";
-  import { getUserData, guardian, supabase, formatDate } from "../../../lib/client";
+  import { guardian } from "../../../lib/client";
+  import api from "$lib/sdk";
   import ClinicHeader from "../../../lib/components/ClinicHeader.svelte";
   import ProfileHeader from "../../../lib/components/ProfileHeader.svelte";
   import JadwalComponent from "../../../lib/components/JadwalComponent.svelte";
@@ -18,18 +19,23 @@
   let klinik;
   let load = false;
 
-
   $: filtered = Array.isArray(catatan)
     ? catatan.filter((item) => item.type == view_daftar)
     : [];
 
-  $: console.log(filtered)
+  $: console.log(filtered);
 
   onMount(async () => {
     await guardian();
-    await hydration();
+    
+    let user = await api.getMyProfile();
+    user_data = user.data
 
-    console.log({ klinik, catatan, jadwal, user_data });
+    ([klinik, jadwal, catatan] = await Promise.allSettled([
+      user_data.clinic && api.getClinicDetails(user_data.clinic),
+      api.getNextAppointment(),
+      user_data.id && api.getAllCatatanForPatient(user_data.id),
+    ])).map(request => request.data)
 
     if (!klinik) {
       goto("/clinic");
@@ -40,50 +46,10 @@
       goto("/app");
     }
 
-    // Fetch to supabase for data list
-    // fetch catatan
-    // fetch jadwal
     load = true;
   });
 
-  async function hydration() {
-    // let results = await Promise.allSettled(requests());
 
-    let req = requests();
-    let user = await req[0]
-
-    console.log(user)
-
-    if(!user.data && user.error) {
-      // return
-    }
-
-    let results = req[1].map((promise) => {
-      return promise(user.data);
-    });
-
-    [klinik, jadwal, catatan] = (await Promise.allSettled(results)).map(
-      (res) => res.value?.data
-    );
-
-    jadwal = jadwal && jadwal[0]
-
-    klinik = klinik && klinik[0];
-
-    user_data = user.data;
-  }
-
-  function requests() {
-    return [
-      getUserData(),
-      [
-        ({ clinic }) =>
-          clinic && supabase.from("clinic").select("*").eq("id", clinic),
-          () => supabase.from("catatan").select("return_date, user_data!catatan_bidan_fkey ( name, address, contact )").limit(1).gte("return_date", formatDate(Date.now())),
-        ({ id }) => supabase.from("catatan").select("id,return_date, created_at,pasien, bidan, catatan, type,user_data!catatan_bidan_fkey ( name )").eq("pasien", id),
-      ],
-    ];
-  }
   function changeView(type) {
     return () => {
       view_daftar = type;
@@ -124,11 +90,11 @@
         <ListCatatan {data_catatan} />
       {/each}
     {:else}
-        <div class="bg-blue-50 rounded-md border p-5">
-            <div class="text-center text-gray-500 text-sm">
-                Anda belum memiliki catatan
-            </div>
+      <div class="bg-blue-50 rounded-md border p-5">
+        <div class="text-center text-gray-500 text-sm">
+          Anda belum memiliki catatan
         </div>
+      </div>
     {/if}
   </ul>
   <br />
