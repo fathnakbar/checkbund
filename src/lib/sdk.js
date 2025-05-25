@@ -277,5 +277,6 @@ class MyBundaAPI {
 
 // Ekspor instance SDK agar bisa langsung digunakan
 // Pastikan Anda mengubah base URL ini sesuai dengan environment Anda
-const api = new MyBundaAPI('https://checkbund-api.anywork.dev/api/v1');
+// const api = new MyBundaAPI('https://checkbund-api.anywork.dev/api/v1');
+const api = new MyBundaAPI('http://localhost:3000/api/v1');
 export default api;

@@ -36,7 +36,7 @@
       <Schedule class="w-3 h-3 mr-1 mt-1" />
       {formatDate(data_catatan?.return_date)}
     </div>
-    <span class="text-gray-500">{formatDate(data_catatan.created_at)}</span>
+    <span class="text-gray-500">{formatDate(data_catatan.createdAt)}</span>
   </div>
   <div class="grid grid-cols-2">
     {#if amount}
@@ -72,7 +72,7 @@
 
   <div class="flex justify-between text-sm mt-5">
     <div class="text-gray-500">
-      Dicatat <b>{data_catatan?.user_data?.name}</b>
+      Dicatat <b>{data_catatan?.bidan?.name ?? "anonim"}</b>
     </div>
     <button class="text-blue-500 font-bold" on:click={toggleDetail}
       >{!show_detail ? "lihat detail" : "sembunyikan"}</button

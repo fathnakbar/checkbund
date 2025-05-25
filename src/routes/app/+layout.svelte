@@ -7,6 +7,7 @@
   onMount(async () => {
     guardian();
     const requestMyProfile = await api.getMyProfile()
+    console.log("Layout", requestMyProfile)
     if(!requestMyProfile.success) {
         api.clearToken()
         await goto("/")

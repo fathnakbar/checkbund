@@ -11,8 +11,10 @@
 
   onMount(async () => {
     let hash = window.location.hash.replace("#", ""); // Get the id from the hash
-    [pasien_id, type] = hash.split(",");
-    const requestPasien = await api.getUserProfile(pasiend_id)
+    hash = hash.split(",");
+    pasien_id = hash[0]
+    type = hash[1]
+    const requestPasien = await api.getUserProfile(pasien_id)
     const requestMyProfile = await api.getMyProfile()
     pasien_data = requestPasien.data
     user = requestMyProfile.data
@@ -29,21 +31,18 @@
     );
 
 
-    const {error} = await supabase
-      .from("catatan")
-      .insert({
-        pasien: pasien_id,
-        bidan: user.id,
-        type,
-        catatan,
-        return_date: values.return_date,
-        clinic: user.clinic,
-      });
+    const requestPostCatatan = await api.createCatatan({clinic: user?.clinic?.id,return_date: values.return_date, pasien: pasien_data.id, bidan: user.id, type, catatan})
 
-      if (!error) {
+      if (requestPostCatatan.success) {
         goto("/app/bidan/catatan#" + pasien_id)
         return
       }
+  }
+
+  function formatDate(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toISOString().split('T')[0];
   }
 </script>
 
@@ -89,8 +88,8 @@
             id="umur"
             name="birth"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            value={pasien_data?.birth}
-            disabled={pasien_data?.birth}
+            value={formatDate(pasien_data?.bumilProfile?.birth)}
+            disabled={pasien_data?.bumilProfile?.birth}
           />
         </div>
         <div class="mb-4">
@@ -102,7 +101,7 @@
             id="nama-suami"
             name="husband"
             class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-            value={pasien_data?.husband}
+            value={pasien_data?.bumilProfile?.husband}
             disabled={pasien_data?.husband}
           />
         </div>

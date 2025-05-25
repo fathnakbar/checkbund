@@ -23,12 +23,12 @@
 
     if (requestMyProfile.success) {
       user_data = requestMyProfile.data;
+      if(user_data?.clinic){
+          goto("/app")
+          return
+      }
     }
 
-    if(user_data?.clinic){
-        goto("/app")
-        return
-    }
 
     load = true;
   });

@@ -46,9 +46,6 @@
     return age;
   }
   
-  function show() {
-    // Redirect to catatan view
-  }
 </script>
 
 <div class="p-5">
@@ -66,11 +63,11 @@
       </div>
       <div>
         <p class="text-sm font-medium">Umur:</p>
-        <p class="text-black">{calculateAge(pasien_data?.birth) ?? "Tidak terdaftar"}</p>
+        <p class="text-black">{calculateAge(pasien_data?.bumilProfile?.birth) ?? "Tidak terdaftar"}</p>
       </div>
       <div>
         <p class="text-sm font-medium">Nama Suami:</p>
-        <p class="text-black">{pasien_data?.husband ?? "Tidak terdaftar"}</p>
+        <p class="text-black">{pasien_data?.bumilProfile?.husband ?? "Tidak terdaftar"}</p>
       </div>
       <div>
         <p class="text-sm font-medium">Alamat:</p>

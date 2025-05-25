@@ -69,8 +69,8 @@
 
   <div class="text-sm font-bold mb-3">Daftar Ibu Hamil</div>
   <ul class="flex-grow w-full">
-    {#if bumil && bumil.length > 0}
-      {#each bumil as item}
+    {#if bumil && bumil.patients.length > 0}
+      {#each bumil.patients as item}
         <ItemListBumil {...{...item, contact: item.phone}} on:detail={show} />
       {/each}
     {:else}
