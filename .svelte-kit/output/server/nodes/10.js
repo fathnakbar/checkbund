@@ -1,7 +1,7 @@
 
 
 export const index = 10;
-export const component = async () => (await import('../entries/pages/register/_page.svelte.js')).default;
-export const imports = ["_app/immutable/nodes/10.258b972e.js","_app/immutable/chunks/index.03fbab45.js","_app/immutable/chunks/Button.0a85351d.js","_app/immutable/chunks/tw-merge.b02e8c47.js","_app/immutable/chunks/mail.6905c3ad.js","_app/immutable/chunks/Spinner.80eb466f.js","_app/immutable/chunks/client.174da6be.js","_app/immutable/chunks/preload-helper.41c905a7.js","_app/immutable/chunks/singletons.86129028.js"];
+export const component = async () => (await import('../entries/pages/clinic/_page.svelte.js')).default;
+export const imports = ["_app/immutable/nodes/10.282cace2.js","_app/immutable/chunks/index.7f6451f6.js","_app/immutable/chunks/client.99a1d91e.js","_app/immutable/chunks/preload-helper.41c905a7.js","_app/immutable/chunks/sdk.f549bc5f.js","_app/immutable/chunks/singletons.f809ae5f.js","_app/immutable/chunks/Button.59a1dc5b.js","_app/immutable/chunks/Indicator.svelte_svelte_type_style_lang.97fd6b4f.js","_app/immutable/chunks/loading.52129804.js","_app/immutable/chunks/Spinner.078d4db8.js"];
 export const stylesheets = ["_app/immutable/assets/Indicator.1d121e74.css"];
 export const fonts = [];

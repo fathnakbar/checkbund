@@ -34,6 +34,9 @@ function compute_slots(slots) {
   }
   return result;
 }
+function null_to_empty(value) {
+  return value == null ? "" : value;
+}
 const globals = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : global;
 let current_component;
 function set_current_component(component) {
@@ -167,6 +170,13 @@ function escape_object(obj) {
   }
   return result;
 }
+function each(items, fn) {
+  let str = "";
+  for (let i = 0; i < items.length; i += 1) {
+    str += fn(items[i], i);
+  }
+  return str;
+}
 const missing_component = {
   $$render: () => ""
 };
@@ -228,18 +238,21 @@ export {
   setContext as a,
   subscribe as b,
   create_ssr_component as c,
-  add_attribute as d,
+  compute_rest_props as d,
   escape as e,
-  compute_rest_props as f,
+  spread as f,
   getContext as g,
-  spread as h,
-  escape_attribute_value as i,
-  escape_object as j,
-  compute_slots as k,
-  globals as l,
+  escape_object as h,
+  add_attribute as i,
+  each as j,
+  escape_attribute_value as k,
+  is_void as l,
   missing_component as m,
   noop as n,
-  is_void as o,
+  get_current_component as o,
+  globals as p,
+  compute_slots as q,
+  null_to_empty as r,
   safe_not_equal as s,
   validate_component as v
 };

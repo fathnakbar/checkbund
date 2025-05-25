@@ -1,4 +1,4 @@
-import { c as create_ssr_component, d as add_attribute, v as validate_component } from "./index.js";
+import { c as create_ssr_component, i as add_attribute, v as validate_component } from "./index.js";
 /* empty css                                         */import { twMerge } from "tailwind-merge";
 const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { color = "primary" } = $$props;

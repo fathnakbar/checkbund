@@ -1,4 +1,4 @@
-import { c as create_ssr_component, f as compute_rest_props, g as getContext, h as spread, i as escape_attribute_value, j as escape_object, o as is_void } from "./index.js";
+import { c as create_ssr_component, d as compute_rest_props, g as getContext, f as spread, k as escape_attribute_value, h as escape_object, l as is_void } from "./index.js";
 import { twMerge } from "tailwind-merge";
 const Button = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$restProps = compute_rest_props($$props, ["pill", "outline", "size", "href", "btnClass", "type", "color", "shadow"]);

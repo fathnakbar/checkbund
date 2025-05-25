@@ -1,6 +1,5 @@
 import { c as create_ssr_component } from "../../chunks/index.js";
-import "../../chunks/client.js";
-const app = "";
+/* empty css                */import "../../chunks/client.js";
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${slots.default ? slots.default({}) : ``}`;
 });

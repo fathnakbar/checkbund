@@ -1,8 +1,10 @@
-import { c as create_ssr_component, f as compute_rest_props, g as getContext, v as validate_component, h as spread, i as escape_attribute_value, j as escape_object, d as add_attribute, k as compute_slots } from "../../../chunks/index.js";
+import { c as create_ssr_component, d as compute_rest_props, g as getContext, v as validate_component, f as spread, k as escape_attribute_value, h as escape_object, i as add_attribute, q as compute_slots } from "../../../chunks/index.js";
 import { B as Button } from "../../../chunks/Button.js";
 /* empty css                                                       */import { twMerge } from "tailwind-merge";
-import { L as Label, I as Input, M as Mail, P as Password } from "../../../chunks/mail.js";
+import { L as Label, I as Input } from "../../../chunks/Input.js";
+import { M as Mail, P as Password } from "../../../chunks/mail.js";
 import "../../../chunks/client.js";
+import "../../../chunks/sdk.js";
 const colorClasses = {
   primary: "text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600",
   secondary: "text-secondary-600 focus:ring-secondary-500 dark:focus:ring-secondary-600",
@@ -76,13 +78,13 @@ const Checkbox = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 
 `;
 });
-const Google = "/_app/immutable/assets/google.0aa569c2.png";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let form = null;
-  let signed;
   let google_signed;
+  let type = "password";
   return `<div class="p-7"><div class="my-7"><h1 class="font-bold text-lg">Welcome Back!</h1>
     <span class="text-gray-500 text-sm">Enter your username and password to conitnue!</span></div>
+  ${``}
   <form action="post"${add_attribute("this", form, 0)}><div class="mb-6">${validate_component(Label, "Label").$$render(
     $$result,
     {
@@ -119,24 +121,17 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   )}</div>
-    <div class="mb-6">${validate_component(Label, "Label").$$render(
-    $$result,
-    {
-      for: "input-group-1",
-      class: "block mb-2"
-    },
-    {},
-    {
-      default: () => {
-        return `Password`;
-      }
+    <div class="mb-6">
+      ${validate_component(Label, "Label").$$render($$result, { for: "password", class: "block mb-2 " }, {}, {
+    default: () => {
+      return `Password`;
     }
-  )}
-      ${validate_component(Input, "Input").$$render(
+  })}
+      <div class="relative">${validate_component(Input, "Input").$$render(
     $$result,
     {
-      name: "password",
-      type: "password",
+      name: type,
+      type,
       placeholder: "Enter your password",
       required: true
     },
@@ -155,13 +150,13 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         )}`;
       }
     }
-  )}</div>
+  )}
+    <div class="absolute top-1 right-3">${`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`}</div></div></div>
     <div class="flex justify-between my-6">${validate_component(Checkbox, "Checkbox").$$render($$result, {}, {}, {
     default: () => {
       return `Remember me`;
     }
-  })}
-      <a href="/forgot_password" class="text-sm text-primary-500">Forgot password?</a></div>
+  })}</div>
     ${validate_component(Button, "Button").$$render(
     $$result,
     {
@@ -177,24 +172,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   )}</form>
-  <div class="text-center text-gray-500 text-sm my-3">or</div>
-  ${validate_component(Button, "Button").$$render(
-    $$result,
-    {
-      class: "w-full",
-      color: "light",
-      disabled: signed
-    },
-    {},
-    {
-      default: () => {
-        return `<img${add_attribute("src", Google, 0)} alt="google icon" width="24" class="mx-2"> Sign in with Google ${``}`;
-      }
-    }
-  )}
 
-  <div class="text-center my-7 text-sm">Don&#39;t have an account? <a href="/register" class="text-primary-500">Register</a></div>
-</div>`;
+  <div class="text-center my-7 text-sm">Don&#39;t have an account? <a href="/register" class="text-primary-500">Register</a></div></div>`;
 });
 export {
   Page as default

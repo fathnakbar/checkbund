@@ -1,20 +1,11 @@
-import { c as create_ssr_component, f as compute_rest_props, h as spread, j as escape_object, d as add_attribute, v as validate_component, l as globals } from "../../../chunks/index.js";
+import { c as create_ssr_component, d as compute_rest_props, f as spread, h as escape_object, i as add_attribute, v as validate_component, p as globals } from "../../../chunks/index.js";
 import { B as Button } from "../../../chunks/Button.js";
-/* empty css                                                       */import { L as Label, I as Input, M as Mail, P as Password } from "../../../chunks/mail.js";
+/* empty css                                                       */import { L as Label, I as Input } from "../../../chunks/Input.js";
+import { M as Mail, P as Password } from "../../../chunks/mail.js";
+import { C as Call } from "../../../chunks/call.js";
 import "../../../chunks/client.js";
 import "@capacitor/preferences";
-const Call = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$restProps = compute_rest_props($$props, []);
-  return `<svg${spread(
-    [
-      { xmlns: "http://www.w3.org/2000/svg" },
-      escape_object($$restProps),
-      { viewBox: "0 0 24 24" },
-      { fill: "currentColor" }
-    ],
-    {}
-  )}><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M6.54 5c.06.89.21 1.76.45 2.59l-1.2 1.2c-.41-1.2-.67-2.47-.76-3.79h1.51m9.86 12.02c.85.24 1.72.39 2.6.45v1.49c-1.32-.09-2.59-.35-3.8-.75l1.2-1.19M7.5 3H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-1-1-1-1.24 0-2.45-.2-3.57-.57-.1-.04-.21-.05-.31-.05-.26 0-.51.1-.71.29l-2.2 2.2c-2.83-1.45-5.15-3.76-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1z"></path></svg>`;
-});
+import "../../../chunks/sdk.js";
 const Home = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$restProps = compute_rest_props($$props, []);
   return `<svg${spread(
@@ -55,10 +46,10 @@ const { Object: Object_1 } = globals;
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let confirm_hint;
   let password_hint;
-  let role = null;
+  let role = "bumil";
   let form = null;
   let roleContainer = null;
-  let submitted = false;
+  let type = "password";
   confirm_hint = void 0;
   password_hint = void 0;
   return `<div class="p-7"><div class="my-7"><h1 class="font-bold text-lg">Create Account</h1>
@@ -67,7 +58,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       ${validate_component(Label, "Label").$$render(
     $$result,
     {
-      class: `block mb-3 relative ${submitted}`
+      class: `block mb-3 relative ${!role}`
     },
     {},
     {
@@ -91,7 +82,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       ${validate_component(Button, "Button").$$render(
     $$result,
     {
-      color: "light"
+      color: "primary"
     },
     {},
     {
@@ -101,6 +92,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   )}
       ${``}</div>
+    ${``}
     <div class="mb-6">${validate_component(Label, "Label").$$render(
     $$result,
     {
@@ -237,6 +229,53 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   )}</div>
     ${``}
+    ${`<div class="mb-6">${validate_component(Label, "Label").$$render(
+    $$result,
+    {
+      for: "input-group-1",
+      class: "block mb-2"
+    },
+    {},
+    {
+      default: () => {
+        return `Tanggal lahir`;
+      }
+    }
+  )}
+      ${validate_component(Input, "Input").$$render(
+    $$result,
+    {
+      type: "date",
+      name: "birth",
+      required: true
+    },
+    {},
+    {}
+  )}</div>
+    <div class="mb-6">${validate_component(Label, "Label").$$render(
+    $$result,
+    {
+      for: "input-group-1",
+      class: "block mb-2"
+    },
+    {},
+    {
+      default: () => {
+        return `Nama Suami`;
+      }
+    }
+  )}
+      ${validate_component(Input, "Input").$$render(
+    $$result,
+    {
+      type: "text",
+      name: "husband",
+      placeholder: "Masukkan nama suami anda",
+      required: true
+    },
+    {},
+    {}
+  )}</div>`}
     <div class="mb-6">${validate_component(Label, "Label").$$render(
     $$result,
     {
@@ -251,7 +290,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   )}
-      ${validate_component(Input, "Input").$$render($$result, Object_1.assign({}, { type: "password" }, { name: "password" }, { placeholder: "Enter your password" }, { color: password_hint }, { required: true }), {}, {
+      <div class="relative">${validate_component(Input, "Input").$$render($$result, Object_1.assign({}, { type }, { name: "password" }, { placeholder: "Enter your password" }, { color: password_hint }, { required: true }), {}, {
     left: () => {
       return `${validate_component(Password, "Password").$$render(
         $$result,
@@ -265,7 +304,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       )}`;
     }
   })}
-      ${``}</div>
+      <div class="absolute top-1 right-3">${`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`}</div>
+      ${``}</div></div>
     <div class="mb-6">${validate_component(Label, "Label").$$render(
     $$result,
     {
@@ -280,7 +320,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   )}
-      ${validate_component(Input, "Input").$$render($$result, Object_1.assign({}, { type: "password" }, { name: "confirm" }, { placeholder: "Re-enter your password" }, { color: confirm_hint }, { required: true }), {}, {
+      <div class="relative">${validate_component(Input, "Input").$$render($$result, Object_1.assign({}, { type }, { name: "confirm" }, { placeholder: "Re-enter your password" }, { color: confirm_hint }, { required: true }), {}, {
     left: () => {
       return `${validate_component(Password, "Password").$$render(
         $$result,
@@ -294,7 +334,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       )}`;
     }
   })}
-      ${``}</div>
+      <div class="absolute top-1 right-3">${`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>`}</div>
+      ${``}</div></div>
 
     
     ${validate_component(Button, "Button").$$render($$result, { class: "w-full mt-7", type: "submit" }, {}, {
