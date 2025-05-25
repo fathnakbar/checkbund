@@ -65,7 +65,7 @@
       <Label for="password" class="block mb-2 ">Password</Label>
       <div class="relative">
       
-      <Input name="password" type="password" placeholder="Enter your password" required>
+      <Input name="password" type="{type}" placeholder="Enter your password" required>
       <Password slot="left" aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
     </Input>
     <div on:click="{show}" class="absolute top-1 right-3">
